@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo-carissima.png";
 
 export default function Navbar() {
@@ -16,8 +17,8 @@ export default function Navbar() {
 
                 {/* LINKS - CENTRADOS */}
                 <div className="absolute left-1/2 -translate-x-1/2 flex gap-4">
-                    <NavButton>Principal</NavButton>
-                    <NavButton>Reservar</NavButton>
+                    <Link to="/"><NavButton>Principal</NavButton></Link>
+                    <Link to="/reservar"><NavButton>Reservar</NavButton></Link>
                     <NavButton>Servicios</NavButton>
                     <NavButton>Agenda</NavButton>
                 </div>

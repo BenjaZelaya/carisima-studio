@@ -1,15 +1,16 @@
 import { useState } from "react";
-import LogoHero from "./LogoHero";
-import ButtonIconsInstaHero from "./ButtonIconsInstaHero";
-import ButtonHero from "./ButtonHero";
-import LocationMap from "./LocationMap";
+import LogoHero from "../components/Hero/LogoHero";
+import ButtonIconsInstaHero from "../components/Hero/ButtonIconsInstaHero";
+import ButtonHero from "../components/Hero/ButtonHero";
+import LocationMap from "../components/Hero/LocationMap";
+import { Link } from "react-router-dom";
 
 export default function Hero() {
   const [showLocation, setShowLocation] = useState(false);
 
   return (
     <>
-      <section className="flex flex-col items-center text-center gap-4 mb-15 ">
+      <section className="flex flex-col items-center text-center gap-4 mb-15 mt-30">
         <LogoHero />
       </section>
 
@@ -44,7 +45,7 @@ export default function Hero() {
             </ButtonIconsInstaHero>
           </a>
 
-          <ButtonHero>Reservar un Turno</ButtonHero>
+         <Link to="/reservar"><ButtonHero>Reservar un Turno</ButtonHero></Link>
           <ButtonHero>Ver todos los servicios</ButtonHero>
           <ButtonHero>Agenda</ButtonHero>
 
