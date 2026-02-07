@@ -4,6 +4,8 @@ import ButtonIconsInstaHero from "../components/Hero/ButtonIconsInstaHero";
 import ButtonHero from "../components/Hero/ButtonHero";
 import LocationMap from "../components/Hero/LocationMap";
 import { Link } from "react-router-dom";
+import About from "../components/Hero/About";
+
 
 export default function Hero() {
   const [showLocation, setShowLocation] = useState(false);
@@ -45,7 +47,7 @@ export default function Hero() {
             </ButtonIconsInstaHero>
           </a>
 
-         <Link to="/reservar"><ButtonHero>Reservar un Turno</ButtonHero></Link>
+          <Link to="/reservar"><ButtonHero>Reservar un Turno</ButtonHero></Link>
           <ButtonHero>Ver todos los servicios</ButtonHero>
           <ButtonHero>Agenda</ButtonHero>
 
@@ -65,6 +67,9 @@ export default function Hero() {
           <LocationMap />
         </div>
       </section>
+      <div>
+        <About />
+      </div>
     </>
   );
 }

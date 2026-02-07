@@ -4,7 +4,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 // Componentes / páginas
 import Navbar from './components/Navbar/Navbar.jsx';     
 import Hero from './page/Hero.jsx';           
-import Reservar from './page/Reservar.jsx';              
+import Reservar from './page/Reservar.jsx';  
+           
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Routes>
             {/* Ruta principal → Hero (Home) */}
             <Route path="/" element={<Hero />} />
+
 
             {/* Ruta de reservas */}
             <Route path="/reservar" element={<Reservar />} />
