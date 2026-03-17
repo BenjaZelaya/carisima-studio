@@ -5,6 +5,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar.jsx';     
 import Hero from './page/Hero.jsx';           
 import Reservar from './page/Reservar.jsx';  
+import Admin from "./page/Admin";
            
 
 function App() {
@@ -19,6 +20,9 @@ function App() {
           <Routes>
             {/* Ruta principal → Hero (Home) */}
             <Route path="/" element={<Hero />} />
+
+
+            <Route path="/admin" element={<Admin />} />
 
 
             {/* Ruta de reservas */}

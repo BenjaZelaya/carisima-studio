@@ -41,16 +41,14 @@ function NavButton({ children, primary }) {
                 px-8 py-3
                 text-sm font-medium
                 rounded-full
-                bg-[#F5F0FA]
-                text-[#4B2E83]
-                border-2 border-[#E6DFF2]
+                border-2
                 shadow-[0_6px_15px_rgba(0,0,0,0.12)]
                 transition-all duration-300
                 hover:shadow-[0_10px_25px_rgba(0,0,0,0.18)]
                 hover:-translate-y-0.5
                 ${primary
-                    ? "bg-purple-100 text-purple-700 hover:bg-purple-200"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-[#ff7bed] text-white border-[#ff7bed] hover:opacity-90"
+                    : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"
                 }
             `}
         >
