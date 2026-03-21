@@ -22,7 +22,7 @@ const Admin = () => {
 
     try {
 
-      const res = await fetch("http://localhost:4000/services", {
+      const res = await fetch("http://localhost:5000/services", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
