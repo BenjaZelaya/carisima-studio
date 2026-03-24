@@ -48,7 +48,7 @@ export default function Hero() {
           </a>
 
           <Link to="/reservar"><ButtonHero>Reservar un Turno</ButtonHero></Link>
-          <ButtonHero>Ver todos los servicios</ButtonHero>
+          <Link to="/servicios"><ButtonHero>Ver Servicios</ButtonHero></Link>
           <ButtonHero>Agenda</ButtonHero>
 
           <ButtonHero onClick={() => setShowLocation(!showLocation)}>
