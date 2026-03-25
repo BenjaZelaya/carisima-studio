@@ -1,9 +1,12 @@
 // src/page/Reservar.jsx
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ListaServicios from "../components/Reservar/ListaServicios.jsx";
 import ResumenReserva from "../components/Reservar/ResumenReserva.jsx";
 
 const Reservar = () => {
+  const navigate = useNavigate();
+
   const [servicios, setServicios] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [seleccionados, setSeleccionados] = useState([]);
@@ -48,7 +51,7 @@ const Reservar = () => {
   const total = seleccionados.reduce((sum, s) => sum + (Number(s.precio) || 0), 0);
 
   const handleContinuar = () => {
-    console.log("Servicios seleccionados:", seleccionados);
+    navigate("/horario", { state: { servicios: seleccionados } });
   };
 
   // ─── Render ─────────────────────────────────────────────────────────────────

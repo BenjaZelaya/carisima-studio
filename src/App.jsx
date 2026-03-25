@@ -9,6 +9,8 @@ import Navbar from './components/Navbar/Navbar.jsx';
 import Hero from './page/Hero.jsx';
 import Servicios from './page/Servicios.jsx';
 import Reservar from './page/Reservar.jsx';
+import SeleccionHorario from './page/SeleccionHorario.jsx';
+import Pago from './page/Pago.jsx';
 import Configuracion from './page/Configuracion.jsx';
 import Login from './page/Login.jsx';
 import Registro from './page/Registro.jsx';
@@ -37,14 +39,25 @@ function App() {
             <Route path="/registro" element={<Registro />} />
             <Route path="/servicios" element={<Servicios />} />
 
-            {/* Privada - usuario logueado */}
+            {/* Privadas - usuario logueado */}
             <Route path="/reservar" element={
               <RutaPrivada>
                 <Reservar />
               </RutaPrivada>
             } />
 
-            {/* Privada - configuracion (usuario + admin) */}
+            <Route path="/horario" element={
+              <RutaPrivada>
+                <SeleccionHorario />
+              </RutaPrivada>
+            } />
+
+            <Route path="/pago" element={
+              <RutaPrivada>
+                <Pago />
+              </RutaPrivada>
+            } />
+
             <Route path="/configuracion" element={
               <RutaPrivada>
                 <Configuracion />
