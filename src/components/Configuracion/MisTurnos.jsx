@@ -1,6 +1,6 @@
 // src/components/Configuracion/MisTurnos.jsx
 import { useState, useEffect } from 'react';
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 
 const ESTADOS_COLOR = {
@@ -25,29 +25,42 @@ const MisTurnos = () => {
   const [turnos, setTurnos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [cancelando, setCancelando] = useState(null);
+
+  const cargar = async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/turnos/mis-turnos', {
+        headers: { 'x-token': token },
+      });
+      const data = await res.json();
+      if (!res.ok) { setError("Error al cargar tus turnos."); return; }
+      setTurnos(data.data || data.turnos || (Array.isArray(data) ? data : []));
+    } catch {
+      setError("Error de conexión. Intentalo más tarde.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const cargar = async () => {
-      try {
-        const res = await fetch('http://localhost:5000/api/turnos/mis-turnos', {
-          headers: { 'x-token': token },
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          setError("Error al cargar tus turnos.");
-          return;
-        }
-        console.log("data recibida:", data); // para ver qué llega
-        setTurnos(data.data || data.turnos || (Array.isArray(data) ? data : []));
-      } catch {
-        setError("Error de conexión. Intentalo más tarde.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (token) cargar();
   }, [token]);
+
+  const handleCancelar = async (id) => {
+    if (!confirm("¿Cancelar este turno?")) return;
+    setCancelando(id);
+    try {
+      const res = await fetch(`http://localhost:5000/api/turnos/${id}/cancelar`, {
+        method: 'PATCH',
+        headers: { 'x-token': token },
+      });
+      if (res.ok) cargar();
+    } catch {
+      setError("Error al cancelar el turno");
+    } finally {
+      setCancelando(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -61,10 +74,8 @@ const MisTurnos = () => {
     return (
       <div className="text-center py-12">
         <p className="text-red-500">{error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-4 px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition text-sm"
-        >
+        <button onClick={() => window.location.reload()}
+          className="mt-4 px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition text-sm">
           Reintentar
         </button>
       </div>
@@ -126,7 +137,7 @@ const MisTurnos = () => {
               </div>
 
               {/* Totales */}
-              <div className="flex justify-between text-sm pt-3 border-t border-gray-100">
+              <div className="flex justify-between text-sm pt-3 border-t border-gray-100 mb-4">
                 <div className="text-gray-500">
                   Total: <span className="font-semibold text-gray-800">AR${turno.total?.toLocaleString()}</span>
                 </div>
@@ -134,6 +145,18 @@ const MisTurnos = () => {
                   Seña: <span className="font-semibold">AR${turno.seña?.toLocaleString()}</span>
                 </div>
               </div>
+
+              {/* Botón cancelar */}
+              {["pendiente", "señado", "confirmado"].includes(turno.estado) && (
+                <button
+                  onClick={() => handleCancelar(turno._id)}
+                  disabled={cancelando === turno._id}
+                  className="w-full flex items-center justify-center gap-2 border border-red-200 text-red-500 hover:bg-red-50 font-medium py-2.5 rounded-xl transition text-sm disabled:opacity-60"
+                >
+                  <X size={15} />
+                  {cancelando === turno._id ? "Cancelando..." : "Cancelar turno"}
+                </button>
+              )}
 
             </div>
           ))}

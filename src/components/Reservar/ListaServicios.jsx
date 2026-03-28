@@ -14,23 +14,24 @@ const ListaServicios = ({
 }) => {
 
   const serviciosFiltrados = servicios.filter((s) => {
-    const coincideBusqueda = s.nombreProducto?.toLowerCase().includes(busqueda.toLowerCase());
+    const coincideBusqueda = s.nombreProducto
+      ?.toLowerCase()
+      .includes(busqueda.toLowerCase());
+
     const coincideCategoria = categoriaActiva
       ? categorias
           .find((c) => c._id === categoriaActiva)
-          ?.productos?.some((p) => (typeof p === "object" ? p._id : p) === s._id)
+          ?.productos?.some(
+            (p) => (typeof p === "object" ? p._id : p) === s._id
+          )
       : true;
+
     return coincideBusqueda && coincideCategoria;
   });
 
   return (
-    <div
-      className="w-full lg:w-3/5 xl:w-2/3 bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 relative"
-      style={{
-        backgroundImage: "radial-gradient(#e5e7eb 1px, transparent 1px)",
-        backgroundSize: "24px 24px",
-      }}
-    >
+    <div className="w-full bg-white rounded-3xl p-5 sm:p-6 lg:p-8 shadow-sm border border-gray-100">
+      
       <BuscadorServicios
         busqueda={busqueda}
         onChange={onBusqueda}
@@ -39,20 +40,29 @@ const ListaServicios = ({
         onCategoria={onCategoria}
       />
 
-      <div className="space-y-5">
+      <div className="mt-8 space-y-4 sm:space-y-5">
         {serviciosFiltrados.length === 0 ? (
-          <div className="text-center py-16 text-gray-500">
-            <p className="text-lg">No encontramos servicios</p>
-            <p className="text-sm mt-2">Intentá con otra búsqueda o categoría</p>
+          <div className="text-center py-20 text-gray-500">
+            <p className="text-xl">No encontramos servicios</p>
+            <p className="text-sm mt-3">
+              Intentá con otra búsqueda o categoría
+            </p>
           </div>
         ) : (
-          serviciosFiltrados.map((servicio) => (
-            <TarjetaServicio
-              key={servicio._id}
-              servicio={servicio}
-              isSelected={seleccionados.some((s) => s._id === servicio._id)}
-              onToggle={onToggle}
-            />
+          serviciosFiltrados.map((servicio, index) => (
+            <div
+              key={`${servicio._id}-${busqueda}-${categoriaActiva}`}
+              className="cascade-item"
+              style={{ animationDelay: `${index * 0.08}s` }}
+            >
+              <TarjetaServicio
+                servicio={servicio}
+                isSelected={seleccionados.some(
+                  (s) => s._id === servicio._id
+                )}
+                onToggle={onToggle}
+              />
+            </div>
           ))
         )}
       </div>
