@@ -1,7 +1,7 @@
 // src/components/Configuracion/admin/GestionTurnos.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext.jsx";
-import { Check, X, Clock, Calendar, User } from "lucide-react";
+import { Check, X, Clock, Calendar, User, Trash2 } from "lucide-react";
 
 const ESTADOS_COLOR = {
   pendiente: "bg-yellow-100 text-yellow-700",
@@ -11,7 +11,7 @@ const ESTADOS_COLOR = {
   completado: "bg-gray-100 text-gray-600",
 };
 
-const MESES = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];
+const MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
 const GestionTurnos = () => {
   const { token } = useAuth();
@@ -69,6 +69,19 @@ const GestionTurnos = () => {
     }
   };
 
+  const handleEliminarDefinitivo = async (id) => {
+  if (!confirm("¿Eliminar definitivamente este turno? Esta acción no se puede deshacer.")) return;
+  try {
+    const res = await fetch(`http://localhost:5000/api/turnos/${id}`, {
+      method: "DELETE",
+      headers: { "x-token": token },
+    });
+    if (res.ok) cargarTurnos();
+  } catch {
+    setError("Error al eliminar turno");
+  }
+};
+
   // ─── Helpers ────────────────────────────────────────────────────────────────
 
   const formatearFecha = (fecha, hora) => {
@@ -104,16 +117,14 @@ const GestionTurnos = () => {
           <button
             key={id}
             onClick={() => setFiltro(id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-              filtro === id
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${filtro === id
                 ? "bg-pink-500 text-white shadow-md shadow-pink-200"
                 : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"
-            }`}
+              }`}
           >
             {label}
-            <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-              filtro === id ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
-            }`}>
+            <span className={`text-xs px-1.5 py-0.5 rounded-full ${filtro === id ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
+              }`}>
               {count}
             </span>
           </button>
@@ -225,7 +236,7 @@ const GestionTurnos = () => {
 
                   {/* Acciones */}
                   <div className="flex gap-2">
-                    {turno.estado === "señado" && (
+                    {["señado", "pendiente"].includes(turno.estado) && (
                       <button
                         onClick={() => handleConfirmar(turno._id)}
                         className="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 rounded-xl transition text-sm"
@@ -241,6 +252,15 @@ const GestionTurnos = () => {
                       >
                         <X size={16} />
                         Cancelar
+                      </button>
+                    )}
+                    {turno.estado === "cancelado" && (
+                      <button
+                        onClick={() => handleEliminarDefinitivo(turno._id)}
+                        className="flex-1 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 rounded-xl transition text-sm"
+                      >
+                        <Trash2 size={16} />
+                        Eliminar definitivamente
                       </button>
                     )}
                   </div>

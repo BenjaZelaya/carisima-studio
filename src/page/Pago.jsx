@@ -70,50 +70,42 @@ const Pago = () => {
   // ─── Subir comprobante ──────────────────────────────────────────────────────
 
   const handleSubirComprobante = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const file = e.target.files[0];
+  if (!file) return;
 
-    setSubiendoComprobante(true);
-    setError(null);
+  setSubiendoComprobante(true);
+  setError(null);
 
-    try {
-      // Primero crea el turno si no existe
-      let turno = turnoCreado;
-      if (!turno) {
-        turno = await crearTurno();
-        if (!turno) return;
-      }
-
-      // Sube la imagen a Cloudinary
-      const formData = new FormData();
-      formData.append("img", file);
-
-      const resImg = await fetch("http://localhost:5000/api/productos/upload", {
-        method: "POST",
-        headers: { "x-token": token },
-        body: formData,
-      });
-      const dataImg = await resImg.json();
-      if (!resImg.ok) { setError("Error al subir el comprobante"); return; }
-
-      // Asocia el comprobante al turno
-      const resTurno = await fetch(`http://localhost:5000/api/turnos/${turno._id}/comprobante`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json", "x-token": token },
-        body: JSON.stringify({ comprobante: dataImg.url }),
-      });
-      const dataTurno = await resTurno.json();
-      if (!resTurno.ok) { setError("Error al registrar el comprobante"); return; }
-
-      setComprobante(dataImg.url);
-      setTurnoCreado(dataTurno);
-      setExito(true);
-    } catch {
-      setError("Error de conexión");
-    } finally {
-      setSubiendoComprobante(false);
+  try {
+    // Primero crea el turno si no existe
+    let turno = turnoCreado;
+    if (!turno) {
+      turno = await crearTurno();
+      if (!turno) return;
     }
-  };
+
+    // Sube el comprobante directamente al turno
+    const formData = new FormData();
+    formData.append("img", file);
+
+    const res = await fetch(`http://localhost:5000/api/turnos/${turno._id}/subir-comprobante`, {
+      method: "POST",
+      headers: { "x-token": token },
+      body: formData,
+    });
+
+    const data = await res.json();
+    if (!res.ok) { setError(data.msg || "Error al subir el comprobante"); return; }
+
+    setComprobante(data.comprobante);
+    setTurnoCreado(data);
+    setExito(true);
+  } catch {
+    setError("Error de conexión");
+  } finally {
+    setSubiendoComprobante(false);
+  }
+};
 
   // ─── Render ─────────────────────────────────────────────────────────────────
 
