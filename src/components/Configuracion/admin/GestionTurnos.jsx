@@ -1,7 +1,7 @@
 // src/components/Configuracion/admin/GestionTurnos.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext.jsx";
-import { Check, X, Clock, Calendar, User, Trash2 } from "lucide-react";
+import { Check, X, Clock, Calendar, User, Trash2, Search } from "lucide-react";
 
 const ESTADOS_COLOR = {
   pendiente: "bg-yellow-100 text-yellow-700",
@@ -18,9 +18,12 @@ const GestionTurnos = () => {
 
   const [turnos, setTurnos] = useState([]);
   const [filtro, setFiltro] = useState("todos");
+  const [busqueda, setBusqueda] = useState("");
+  const [fechaFiltro, setFechaFiltro] = useState("");
   const [turnoExpandido, setTurnoExpandido] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
+  const [mostrarDetallesCambios, setMostrarDetallesCambios] = useState(null);
 
   // ─── Cargar turnos ──────────────────────────────────────────────────────────
 
@@ -89,11 +92,62 @@ const GestionTurnos = () => {
     return `${d.getDate()} ${MESES[d.getMonth()]} ${d.getFullYear()}, ${hora}hs`;
   };
 
-  const turnosFiltrados = turnos.filter((t) =>
-    filtro === "todos" ? true : t.estado === filtro
-  );
+  const turnosFiltrados = turnos.filter((t) => {
+    // Filtro por estado/tipo
+    let cumpleFiltro = true;
+    if (filtro === "todos") cumpleFiltro = true;
+    else if (filtro === "cambios") cumpleFiltro = t.cambiosRealizados > 0;
+    else cumpleFiltro = t.estado === filtro;
+
+    if (!cumpleFiltro) return false;
+
+    // Filtro de búsqueda
+    if (busqueda.trim() === "") {
+      // Si no hay búsqueda, continúa
+    } else {
+      const busquedaLower = busqueda.toLowerCase();
+      
+      // Buscar en nombre y apellido
+      const nombre = `${t.usuario?.nombre || ""} ${t.usuario?.apellido || ""}`.toLowerCase();
+      if (nombre.includes(busquedaLower)) {
+        // Continúa con el filtro de fecha
+      } else if (t.usuario?.email?.toLowerCase().includes(busquedaLower)) {
+        // Continúa con el filtro de fecha
+      } else if (t.usuario?.telefono?.includes(busqueda)) {
+        // Continúa con el filtro de fecha
+      } else {
+        // Buscar en servicios/productos
+        const servicios = t.productos?.map(p => p.nombreProducto?.toLowerCase()).join(" ");
+        if (servicios?.includes(busquedaLower)) {
+          // Continúa con el filtro de fecha
+        } else {
+          // Buscar en fecha
+          const fechaFormato = new Date(t.fecha).toLocaleDateString("es-AR");
+          if (!fechaFormato.includes(busqueda)) return false;
+        }
+      }
+    }
+
+    // Filtro por fecha
+    if (fechaFiltro.trim() !== "") {
+      const fechaTurno = new Date(t.fecha);
+      const fechaSeleccionada = new Date(fechaFiltro);
+      
+      // Comparar solo año, mes y día (ignorar hora)
+      if (
+        fechaTurno.getFullYear() !== fechaSeleccionada.getFullYear() ||
+        fechaTurno.getMonth() !== fechaSeleccionada.getMonth() ||
+        fechaTurno.getDate() !== fechaSeleccionada.getDate()
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  });
 
   const contarPorEstado = (estado) => turnos.filter((t) => t.estado === estado).length;
+  const contarConCambios = () => turnos.filter((t) => t.cambiosRealizados > 0).length;
 
   // ─── Render ─────────────────────────────────────────────────────────────────
 
@@ -105,10 +159,44 @@ const GestionTurnos = () => {
         </div>
       )}
 
+      {/* Búsqueda y Filtro por fecha */}
+      <div className="flex gap-3 mb-6">
+        <div className="flex-1 relative">
+          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Buscar por nombre, email, teléfono, servicio o fecha..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100 text-sm"
+          />
+        </div>
+        
+        <div className="relative">
+          <Calendar size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          <input
+            type="date"
+            value={fechaFiltro}
+            onChange={(e) => setFechaFiltro(e.target.value)}
+            className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100 text-sm"
+          />
+        </div>
+        
+        {fechaFiltro && (
+          <button
+            onClick={() => setFechaFiltro("")}
+            className="px-3 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl transition text-sm font-medium"
+          >
+            Limpiar fecha
+          </button>
+        )}
+      </div>
+
       {/* Filtros */}
       <div className="flex flex-wrap gap-2 mb-6">
         {[
           { id: "todos", label: "Todos", count: turnos.length },
+          { id: "cambios", label: "Con cambios de horario", count: contarConCambios() },
           { id: "señado", label: "Con comprobante", count: contarPorEstado("señado") },
           { id: "pendiente", label: "Pendientes", count: contarPorEstado("pendiente") },
           { id: "confirmado", label: "Confirmados", count: contarPorEstado("confirmado") },
@@ -139,7 +227,9 @@ const GestionTurnos = () => {
       ) : turnosFiltrados.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
           <Calendar size={32} className="text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-400 text-sm">No hay turnos en esta categoría</p>
+          <p className="text-gray-400 text-sm">
+            {busqueda.trim() ? "No se encontraron turnos con esa búsqueda" : "No hay turnos en esta categoría"}
+          </p>
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -187,6 +277,31 @@ const GestionTurnos = () => {
               {/* Detalle expandido */}
               {turnoExpandido === turno._id && (
                 <div className="border-t border-gray-100 p-4 bg-gray-50">
+
+                  {/* Información de cambios de horario */}
+                  {turno.cambiosRealizados > 0 && (
+                    <div className="mb-4 bg-blue-50 border border-blue-200 rounded-xl p-3">
+                      <p className="text-xs text-blue-600 mb-2 font-semibold uppercase tracking-wide flex items-center gap-2">
+                        <Clock size={14} />
+                        Historial de cambios ({turno.cambiosRealizados}/{turno.cambiosRestantes || 2})
+                      </p>
+                      <div className="flex items-center gap-3 text-sm">
+                        <span className="text-gray-400 line-through">{turno.horaInicio}</span>
+                        <span className="text-gray-300">→</span>
+                        <span className="text-green-600 font-semibold">{turno.horaInicio}</span>
+                      </div>
+                      {turno.cambios && turno.cambios.length > 0 && (
+                        <div className="mt-2 space-y-1">
+                          {turno.cambios.map((cambio, idx) => (
+                            <p key={idx} className="text-xs text-blue-600">
+                              Cambio {idx + 1}: <span className="line-through text-gray-400">{cambio.anterior}</span> → <span className="font-semibold text-green-600">{cambio.nuevo}</span>
+                              <span className="text-gray-400 ml-2">({new Date(cambio.fecha).toLocaleDateString()})</span>
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
 
                   {/* Servicios */}
                   <div className="flex flex-col gap-2 mb-4">

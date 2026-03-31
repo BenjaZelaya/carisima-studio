@@ -1,7 +1,8 @@
 // src/components/Configuracion/MisTurnos.jsx
 import { useState, useEffect } from 'react';
-import { Calendar, Clock, X } from 'lucide-react';
+import { Calendar, Clock, X, Edit2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
+import CambiarHorarioModal from './CambiarHorarioModal';
 
 const ESTADOS_COLOR = {
   confirmado: 'bg-green-100 text-green-700 border-green-200',
@@ -26,6 +27,9 @@ const MisTurnos = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [cancelando, setCancelando] = useState(null);
+  const [cambiosDisponibles, setCambiosDisponibles] = useState({});
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [turnoSeleccionado, setTurnoSeleccionado] = useState(null);
 
   const cargar = async () => {
     try {
@@ -34,7 +38,30 @@ const MisTurnos = () => {
       });
       const data = await res.json();
       if (!res.ok) { setError("Error al cargar tus turnos."); return; }
-      setTurnos(data.data || data.turnos || (Array.isArray(data) ? data : []));
+      
+      const turnosData = data.data || data.turnos || (Array.isArray(data) ? data : []);
+      setTurnos(turnosData);
+      
+      // Cargar info de cambios disponibles para cada turno confirmado
+      turnosData.forEach(async (turno) => {
+        if (turno.estado === 'confirmado') {
+          try {
+            const resCambios = await fetch(
+              `http://localhost:5000/api/turnos/${turno._id}/cambios-disponibles`,
+              { headers: { 'x-token': token } }
+            );
+            if (resCambios.ok) {
+              const infoCambios = await resCambios.json();
+              setCambiosDisponibles(prev => ({
+                ...prev,
+                [turno._id]: infoCambios
+              }));
+            }
+          } catch (err) {
+            console.error('Error al cargar cambios disponibles:', err);
+          }
+        }
+      });
     } catch {
       setError("Error de conexión. Intentalo más tarde.");
     } finally {
@@ -146,21 +173,68 @@ const MisTurnos = () => {
                 </div>
               </div>
 
-              {/* Botón cancelar */}
-              {["pendiente", "señado", "confirmado"].includes(turno.estado) && (
-                <button
-                  onClick={() => handleCancelar(turno._id)}
-                  disabled={cancelando === turno._id}
-                  className="w-full flex items-center justify-center gap-2 border border-red-200 text-red-500 hover:bg-red-50 font-medium py-2.5 rounded-xl transition text-sm disabled:opacity-60"
-                >
-                  <X size={15} />
-                  {cancelando === turno._id ? "Cancelando..." : "Cancelar turno"}
-                </button>
+              {/* Info de cambios disponibles */}
+              {turno.estado === 'confirmado' && cambiosDisponibles[turno._id] && (
+                <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-4">
+                  <p className="text-xs text-blue-600 font-medium mb-2">CAMBIOS DE HORARIO</p>
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <p className="text-sm text-blue-700">
+                        Cambios restantes: <span className="font-bold">{cambiosDisponibles[turno._id].cambiosRestantes}/2</span>
+                      </p>
+                      {cambiosDisponibles[turno._id].tiempoRestanteHoras > 0 && (
+                        <p className="text-xs text-blue-600 mt-1">
+                          Disponible por: <span className="font-semibold">{cambiosDisponibles[turno._id].tiempoRestanteHoras}h</span>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
               )}
+
+              {/* Botones */}
+              <div className="flex gap-2">
+                {turno.estado === 'confirmado' && cambiosDisponibles[turno._id]?.puedesCambiar && (
+                  <button
+                    onClick={() => {
+                      setTurnoSeleccionado(turno);
+                      setModalAbierto(true);
+                    }}
+                    className="flex-1 flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 font-medium py-2.5 rounded-xl transition text-sm"
+                  >
+                    <Edit2 size={15} />
+                    Cambiar horario
+                  </button>
+                )}
+                {["pendiente", "señado", "confirmado"].includes(turno.estado) && (
+                  <button
+                    onClick={() => handleCancelar(turno._id)}
+                    disabled={cancelando === turno._id}
+                    className="flex-1 flex items-center justify-center gap-2 border border-red-200 text-red-500 hover:bg-red-50 font-medium py-2.5 rounded-xl transition text-sm disabled:opacity-60"
+                  >
+                    <X size={15} />
+                    {cancelando === turno._id ? "Cancelando..." : "Cancelar turno"}
+                  </button>
+                )}
+              </div>
 
             </div>
           ))}
         </div>
+      )}
+
+      {/* Modal para cambiar horario */}
+      {turnoSeleccionado && (
+        <CambiarHorarioModal
+          turno={turnoSeleccionado}
+          isOpen={modalAbierto}
+          onClose={() => {
+            setModalAbierto(false);
+            setTurnoSeleccionado(null);
+          }}
+          onSuccess={() => cargar()}
+          token={token}
+        />
       )}
     </div>
   );
