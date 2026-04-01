@@ -22,7 +22,7 @@ const PanelAdmin = () => {
       <p className="text-gray-400 text-sm mb-6">Gestioná turnos, productos, categorías y agenda</p>
 
       {/* Tabs */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex gap-2 mb-6 overflow-x-auto no-scrollbar pb-2">
         {TABS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}

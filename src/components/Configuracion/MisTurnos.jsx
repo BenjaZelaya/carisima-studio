@@ -110,7 +110,7 @@ const MisTurnos = () => {
   }
 
   return (
-    <div className="max-w-2xl">
+    <div className="max-w-2xl w-full">
       <h1 className="text-2xl font-bold text-gray-800 mb-1">Mis Turnos</h1>
       <p className="text-gray-400 text-sm mb-8">Historial y próximas reservas</p>
 
