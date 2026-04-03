@@ -53,9 +53,7 @@ export default function Navbar() {
               </button>
             </>
           ) : (
-            <Link to="/login">
-              <NavButton primary>Ingresar</NavButton>
-            </Link>
+            <NavButton to="/login" primary>Ingresar</NavButton>
           )}
         </div>
 

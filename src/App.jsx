@@ -14,6 +14,7 @@ import Pago from './page/Pago.jsx';
 import Configuracion from './page/Configuracion.jsx';
 import Login from './page/Login.jsx';
 import Registro from './page/Registro.jsx';
+import PagoResultado from './page/PagoResultado.jsx';
 
 // ─── Rutas protegidas ────────────────────────────────────────────────────────
 
@@ -38,6 +39,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/servicios" element={<Servicios />} />
+            <Route path="/pago/resultado" element={<PagoResultado />} />
 
             {/* Privadas - usuario logueado */}
             <Route path="/reservar" element={
@@ -57,6 +59,7 @@ function App() {
                 <Pago />
               </RutaPrivada>
             } />
+            
 
             <Route path="/configuracion" element={
               <RutaPrivada>
