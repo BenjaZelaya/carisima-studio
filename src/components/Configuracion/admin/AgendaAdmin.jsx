@@ -1,8 +1,8 @@
 // src/components/Configuracion/admin/AgendaAdmin.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext.jsx";
-import ConfigGeneral from "./agenda/ConfigGeneral.jsx";
-import CalendarioAdmin from "./agenda/CalendarioAdmin.jsx";
+import ConfigGeneral from "./Agenda/ConfigGeneral.jsx";
+import CalendarioAdmin from "./Agenda/CalendarioAdmin.jsx";
 
 const AgendaAdmin = () => {
   const { token } = useAuth();

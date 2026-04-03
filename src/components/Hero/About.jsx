@@ -1,5 +1,5 @@
 
-import ValueCard from "./about/ValueCard";
+import ValueCard from "./About/ValueCard";
 import ProfessionalCard from "./About/ProfessionalCard";
 import ImageReveal from "./About/ImageReveal";
 import aboutImg from "../../assets/about.jpg";
