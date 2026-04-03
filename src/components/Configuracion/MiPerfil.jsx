@@ -28,7 +28,7 @@ const MiPerfil = () => {
       const body = { ...form };
       if (!body.password) delete body.password;
 
-      const res = await fetch("http://localhost:5000/api/usuarios/perfil", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/perfil`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

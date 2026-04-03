@@ -56,7 +56,7 @@ const CalendarioAdmin = ({ disponibilidad, bloqueos, token, onActualizar }) => {
   const bloquearDia = async (dia) => {
     const fecha = formatFecha(dia);
     try {
-      await fetch("http://localhost:5000/api/horarios/bloqueos", {
+      await fetch(`${import.meta.env.VITE_API_URL}/horarios/bloqueos`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-token": token },
         body: JSON.stringify({ tipo: "dia", fecha }),
@@ -75,7 +75,7 @@ const CalendarioAdmin = ({ disponibilidad, bloqueos, token, onActualizar }) => {
     });
     if (!bloqueo) return;
     try {
-      await fetch(`http://localhost:5000/api/horarios/bloqueos/${bloqueo._id}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/horarios/bloqueos/${bloqueo._id}`, {
         method: "DELETE",
         headers: { "x-token": token },
       });

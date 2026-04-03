@@ -112,7 +112,7 @@ const GestionProductos = () => {
 
   const cargarProductos = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/productos/admin", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/productos/admin`, {
         headers: { "x-token": token },
       });
       const data = await res.json();
@@ -141,7 +141,7 @@ const GestionProductos = () => {
 
     // Guarda el nuevo orden en el backend
     try {
-      await fetch("http://localhost:5000/api/productos/orden", {
+      await fetch(`${import.meta.env.VITE_API_URL}/productos/orden`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", "x-token": token },
         body: JSON.stringify({
@@ -163,7 +163,7 @@ const GestionProductos = () => {
     const formData = new FormData();
     formData.append("img", file);
     try {
-      const res = await fetch("http://localhost:5000/api/productos/upload", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/productos/upload`, {
         method: "POST",
         headers: { "x-token": token },
         body: formData,
@@ -194,8 +194,8 @@ const GestionProductos = () => {
     setExito(null);
 
     const url = editandoId
-      ? `http://localhost:5000/api/productos/${editandoId}`
-      : "http://localhost:5000/api/productos";
+      ? `${import.meta.env.VITE_API_URL}/productos/${editandoId}`
+      : `${import.meta.env.VITE_API_URL}/productos`;
 
     try {
       const res = await fetch(url, {
@@ -235,7 +235,7 @@ const GestionProductos = () => {
 
   const handleEliminar = async (id) => {
     if (!confirm("¿Desactivar este producto?")) return;
-    await fetch(`http://localhost:5000/api/productos/${id}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/productos/${id}`, {
       method: "DELETE",
       headers: { "x-token": token },
     });
@@ -243,7 +243,7 @@ const GestionProductos = () => {
   };
 
   const handleRestaurar = async (id) => {
-    await fetch(`http://localhost:5000/api/productos/${id}/restaurar`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/productos/${id}/restaurar`, {
       method: "PATCH",
       headers: { "x-token": token },
     });
@@ -252,7 +252,7 @@ const GestionProductos = () => {
 
   const handleEliminarDefinitivo = async (id) => {
     if (!confirm("¿Eliminar definitivamente? Esta acción no se puede deshacer.")) return;
-    await fetch(`http://localhost:5000/api/productos/${id}/definitivo`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/productos/${id}/definitivo`, {
       method: "DELETE",
       headers: { "x-token": token },
     });

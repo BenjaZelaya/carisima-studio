@@ -20,8 +20,8 @@ const Reservar = () => {
     const cargar = async () => {
       try {
         const [resProductos, resCategorias] = await Promise.all([
-          fetch("http://localhost:5000/api/productos"),
-          fetch("http://localhost:5000/api/categorias"),
+          fetch(`${import.meta.env.VITE_API_URL}/productos`),
+          fetch(`${import.meta.env.VITE_API_URL}/categorias`),
         ]);
         const dataProductos = await resProductos.json();
         const dataCategorias = await resCategorias.json();

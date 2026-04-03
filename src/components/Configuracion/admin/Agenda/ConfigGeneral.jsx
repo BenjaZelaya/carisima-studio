@@ -28,7 +28,7 @@ const ConfigGeneral = ({ onActualizar }) => {
   useEffect(() => {
     const cargar = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/horarios/config");
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/horarios/config`);
         const data = await res.json();
         setForm({
           horaInicio: data.horaInicio || "09:00",
@@ -58,7 +58,7 @@ const ConfigGeneral = ({ onActualizar }) => {
     setError(null);
     setExito(null);
     try {
-      const res = await fetch("http://localhost:5000/api/horarios/config", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/horarios/config`, {
         method: "PUT",
         headers: { "Content-Type": "application/json", "x-token": token },
         body: JSON.stringify(form),

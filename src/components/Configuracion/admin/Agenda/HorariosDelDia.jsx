@@ -19,8 +19,8 @@ const HorariosDelDia = ({ fecha, onCerrar, onActualizar }) => {
     setCargando(true);
     try {
       const [resDisp, resBloqueos] = await Promise.all([
-        fetch(`http://localhost:5000/api/horarios/disponibilidad?fecha=${fecha}`),
-        fetch("http://localhost:5000/api/horarios/bloqueos", { headers: { "x-token": token } }),
+        fetch(`${import.meta.env.VITE_API_URL}/horarios/disponibilidad?fecha=${fecha}`),
+        fetch(`${import.meta.env.VITE_API_URL}/horarios/bloqueos`, { headers: { "x-token": token } }),
       ]);
       const dataDisp = await resDisp.json();
       const dataBloqueos = await resBloqueos.json();
@@ -44,7 +44,7 @@ const HorariosDelDia = ({ fecha, onCerrar, onActualizar }) => {
 
   const bloquearHorario = async (horaInicio, horaFin) => {
     try {
-      await fetch("http://localhost:5000/api/horarios/bloqueos", {
+      await fetch(`${import.meta.env.VITE_API_URL}/horarios/bloqueos`, {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-token": token },
         body: JSON.stringify({ tipo: "horario", fecha, horaInicio, horaFin }),
@@ -58,7 +58,7 @@ const HorariosDelDia = ({ fecha, onCerrar, onActualizar }) => {
 
   const desbloquearHorario = async (bloqueoId) => {
     try {
-      await fetch(`http://localhost:5000/api/horarios/bloqueos/${bloqueoId}`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/horarios/bloqueos/${bloqueoId}`, {
         method: "DELETE",
         headers: { "x-token": token },
       });
