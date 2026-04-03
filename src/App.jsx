@@ -1,34 +1,73 @@
 // src/App.jsx
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
+// Contexto
+import { useAuth } from './context/AuthContext.jsx';
 
 // Componentes / páginas
-import Navbar from './components/Navbar/Navbar.jsx';     
-import Hero from './page/Hero.jsx';           
-import Reservar from './page/Reservar.jsx';  
-import Admin from "./page/Admin";
-           
+import Navbar from './components/Navbar/Navbar.jsx';
+import Hero from './page/Hero.jsx';
+import Servicios from './page/Servicios.jsx';
+import Reservar from './page/Reservar.jsx';
+import SeleccionHorario from './page/SeleccionHorario.jsx';
+import Pago from './page/Pago.jsx';
+import Configuracion from './page/Configuracion.jsx';
+import Login from './page/Login.jsx';
+import Registro from './page/Registro.jsx';
+import PagoResultado from './page/PagoResultado.jsx';
+
+// ─── Rutas protegidas ────────────────────────────────────────────────────────
+
+const RutaPrivada = ({ children }) => {
+  const { estaLogueado, cargando } = useAuth();
+  if (cargando) return null;
+  if (!estaLogueado) return <Navigate to="/login" />;
+  return children;
+};
+
+// ─── App ─────────────────────────────────────────────────────────────────────
 
 function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-white text-black flex flex-col">
-        {/* Navbar siempre visible en todas las páginas */}
         <Navbar />
-
-        {/* Contenido principal con rutas */}
         <main className="flex-grow">
           <Routes>
-            {/* Ruta principal → Hero (Home) */}
+            {/* Públicas */}
             <Route path="/" element={<Hero />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
+            <Route path="/servicios" element={<Servicios />} />
+            <Route path="/pago/resultado" element={<PagoResultado />} />
 
+            {/* Privadas - usuario logueado */}
+            <Route path="/reservar" element={
+              <RutaPrivada>
+                <Reservar />
+              </RutaPrivada>
+            } />
 
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/horario" element={
+              <RutaPrivada>
+                <SeleccionHorario />
+              </RutaPrivada>
+            } />
 
+            <Route path="/pago" element={
+              <RutaPrivada>
+                <Pago />
+              </RutaPrivada>
+            } />
+            
 
-            {/* Ruta de reservas */}
-            <Route path="/reservar" element={<Reservar />} />
+            <Route path="/configuracion" element={
+              <RutaPrivada>
+                <Configuracion />
+              </RutaPrivada>
+            } />
 
-            {/* Ruta 404 (opcional, pero recomendado) */}
+            {/* 404 */}
             <Route path="*" element={
               <div className="min-h-screen flex items-center justify-center">
                 <h1 className="text-4xl font-bold">404 - Página no encontrada</h1>
@@ -36,8 +75,6 @@ function App() {
             } />
           </Routes>
         </main>
-
-        {/* Podrías poner un Footer aquí más adelante */}
       </div>
     </BrowserRouter>
   );
