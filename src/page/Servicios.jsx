@@ -14,7 +14,7 @@ const Servicios = () => {
   useEffect(() => {
     const cargar = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/productos");
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/productos`);
         const data = await res.json();
         setProductos(data.productos || []);
       } catch (error) {
