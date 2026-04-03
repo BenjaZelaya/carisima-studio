@@ -30,7 +30,7 @@ const SeleccionHorario = () => {
       try {
         const hoy = new Date().toISOString().split("T")[0];
         const res = await fetch(
-          `http://localhost:5000/api/horarios/disponibilidad?fecha=${hoy}`
+          `${import.meta.env.VITE_API_URL}/horarios/disponibilidad?fecha=${hoy}`
         );
         const data = await res.json();
         setDisponibilidad(data);

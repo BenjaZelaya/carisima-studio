@@ -56,7 +56,7 @@ const Pago = () => {
       }
 
       try {
-        const res = await fetch("http://localhost:5000/api/turnos/mis-turnos", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/mis-turnos`, {
           headers: { "x-token": token },
         });
         const data = await res.json();
@@ -108,7 +108,7 @@ const Pago = () => {
     setCargando(true);
     setError(null);
     try {
-      const res = await fetch("http://localhost:5000/api/turnos", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -146,7 +146,7 @@ const Pago = () => {
         if (!turno) return;
       }
 
-      const res = await fetch(`http://localhost:5000/api/pagos/preferencia/${turno._id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/pagos/preferencia/${turno._id}`, {
         method: "POST",
         headers: { "x-token": token },
       });
@@ -178,7 +178,7 @@ const Pago = () => {
       const formData = new FormData();
       formData.append("img", file);
 
-      const res = await fetch(`http://localhost:5000/api/turnos/${turno._id}/subir-comprobante`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${turno._id}/subir-comprobante`, {
         method: "POST",
         headers: { "x-token": token },
         body: formData,

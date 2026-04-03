@@ -29,7 +29,7 @@ const GestionTurnos = () => {
 
   const cargarTurnos = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/turnos/admin", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/admin`, {
         headers: { "x-token": token },
       });
       const data = await res.json();
@@ -49,7 +49,7 @@ const GestionTurnos = () => {
 
   const handleConfirmar = async (id) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/turnos/${id}/confirmar`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${id}/confirmar`, {
         method: "PATCH",
         headers: { "x-token": token },
       });
@@ -62,7 +62,7 @@ const GestionTurnos = () => {
   const handleCancelar = async (id) => {
     if (!confirm("¿Cancelar este turno?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/turnos/${id}/cancelar`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${id}/cancelar`, {
         method: "PATCH",
         headers: { "x-token": token },
       });
@@ -75,7 +75,7 @@ const GestionTurnos = () => {
   const handleEliminarDefinitivo = async (id) => {
   if (!confirm("¿Eliminar definitivamente este turno? Esta acción no se puede deshacer.")) return;
   try {
-    const res = await fetch(`http://localhost:5000/api/turnos/${id}`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${id}`, {
       method: "DELETE",
       headers: { "x-token": token },
     });

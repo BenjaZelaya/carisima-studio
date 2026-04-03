@@ -144,7 +144,7 @@ const GestionCategorias = () => {
 
   const cargarCategorias = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/categorias/admin", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/categorias/admin`, {
         headers: { "x-token": token },
       });
       const data = await res.json();
@@ -157,7 +157,7 @@ const GestionCategorias = () => {
 
   const cargarProductos = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/productos/admin", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/productos/admin`, {
         headers: { "x-token": token },
       });
       const data = await res.json();
@@ -185,7 +185,7 @@ const GestionCategorias = () => {
     setCategorias(nuevasCategorias);
 
     try {
-      await fetch("http://localhost:5000/api/categorias/orden", {
+      await fetch(`${import.meta.env.VITE_API_URL}/categorias/orden`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", "x-token": token },
         body: JSON.stringify({
@@ -212,8 +212,8 @@ const GestionCategorias = () => {
     setExito(null);
 
     const url = editandoId
-      ? `http://localhost:5000/api/categorias/${editandoId}`
-      : "http://localhost:5000/api/categorias";
+      ? `${import.meta.env.VITE_API_URL}/categorias/${editandoId}`
+      : `${import.meta.env.VITE_API_URL}/categorias`;
 
     try {
       const res = await fetch(url, {
@@ -251,7 +251,7 @@ const GestionCategorias = () => {
 
   const handleEliminar = async (id) => {
     if (!confirm("¿Desactivar esta categoría?")) return;
-    await fetch(`http://localhost:5000/api/categorias/${id}`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/categorias/${id}`, {
       method: "DELETE",
       headers: { "x-token": token },
     });
@@ -259,7 +259,7 @@ const GestionCategorias = () => {
   };
 
   const handleRestaurar = async (id) => {
-    await fetch(`http://localhost:5000/api/categorias/${id}/restaurar`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/categorias/${id}/restaurar`, {
       method: "PATCH",
       headers: { "x-token": token },
     });
@@ -268,7 +268,7 @@ const GestionCategorias = () => {
 
   const handleEliminarDefinitivo = async (id) => {
     if (!confirm("¿Eliminar definitivamente? Esta acción no se puede deshacer.")) return;
-    await fetch(`http://localhost:5000/api/categorias/${id}/definitivo`, {
+    await fetch(`${import.meta.env.VITE_API_URL}/categorias/${id}/definitivo`, {
       method: "DELETE",
       headers: { "x-token": token },
     });
@@ -277,7 +277,7 @@ const GestionCategorias = () => {
 
   const handleAgregarProducto = async (categoriaId, productoId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/categorias/${categoriaId}/agregar-producto`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/categorias/${categoriaId}/agregar-producto`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", "x-token": token },
         body: JSON.stringify({ productoId }),
@@ -292,7 +292,7 @@ const GestionCategorias = () => {
 
   const handleQuitarProducto = async (categoriaId, productoId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/categorias/${categoriaId}/quitar-producto`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/categorias/${categoriaId}/quitar-producto`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json", "x-token": token },
         body: JSON.stringify({ productoId }),

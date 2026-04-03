@@ -28,7 +28,7 @@ const Registro = () => {
 
     try {
       // Registro
-      const resRegistro = await fetch("http://localhost:5000/api/auth/register", {
+      const resRegistro = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -42,7 +42,7 @@ const Registro = () => {
       }
 
       // Login automático tras registro
-      const resLogin = await fetch("http://localhost:5000/api/auth/login", {
+      const resLogin = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: form.email, password: form.password }),

@@ -31,7 +31,7 @@ const CambiarHorarioModal = ({ turno, isOpen, onClose, onSuccess, token }) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('http://localhost:5000/api/horarios/disponibilidad', {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/horarios/disponibilidad`, {
         headers: {
           'x-token': token,
         },
@@ -101,7 +101,7 @@ const CambiarHorarioModal = ({ turno, isOpen, onClose, onSuccess, token }) => {
     setError(null);
     
     try {
-      const res = await fetch(`http://localhost:5000/api/turnos/${turno._id}/cambiar-horario`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${turno._id}/cambiar-horario`, {
         method: 'PATCH',
         headers: {
           'x-token': token,

@@ -15,8 +15,8 @@ const AgendaAdmin = () => {
     try {
       const hoy = new Date().toISOString().split("T")[0];
       const [resDisp, resBloqueos] = await Promise.all([
-        fetch(`http://localhost:5000/api/horarios/disponibilidad?fecha=${hoy}`),
-        fetch("http://localhost:5000/api/horarios/bloqueos", { headers: { "x-token": token } }),
+        fetch(`${import.meta.env.VITE_API_URL}/horarios/disponibilidad?fecha=${hoy}`),
+        fetch(`${import.meta.env.VITE_API_URL}/horarios/bloqueos`, { headers: { "x-token": token } }),
       ]);
       const dataDisp = await resDisp.json();
       const dataBloqueos = await resBloqueos.json();
