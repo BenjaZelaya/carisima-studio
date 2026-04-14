@@ -23,7 +23,6 @@ const GestionTurnos = () => {
   const [turnoExpandido, setTurnoExpandido] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
-  const [mostrarDetallesCambios, setMostrarDetallesCambios] = useState(null);
 
   // ─── Cargar turnos ──────────────────────────────────────────────────────────
 
@@ -73,17 +72,17 @@ const GestionTurnos = () => {
   };
 
   const handleEliminarDefinitivo = async (id) => {
-  if (!confirm("¿Eliminar definitivamente este turno? Esta acción no se puede deshacer.")) return;
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${id}`, {
-      method: "DELETE",
-      headers: { "x-token": token },
-    });
-    if (res.ok) cargarTurnos();
-  } catch {
-    setError("Error al eliminar turno");
-  }
-};
+    if (!confirm("¿Eliminar definitivamente este turno? Esta acción no se puede deshacer.")) return;
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${id}`, {
+        method: "DELETE",
+        headers: { "x-token": token },
+      });
+      if (res.ok) cargarTurnos();
+    } catch {
+      setError("Error al eliminar turno");
+    }
+  };
 
   // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -93,7 +92,6 @@ const GestionTurnos = () => {
   };
 
   const turnosFiltrados = turnos.filter((t) => {
-    // Filtro por estado/tipo
     let cumpleFiltro = true;
     if (filtro === "todos") cumpleFiltro = true;
     else if (filtro === "cambios") cumpleFiltro = t.cambiosRealizados > 0;
@@ -101,39 +99,23 @@ const GestionTurnos = () => {
 
     if (!cumpleFiltro) return false;
 
-    // Filtro de búsqueda
-    if (busqueda.trim() === "") {
-      // Si no hay búsqueda, continúa
-    } else {
+    if (busqueda.trim() !== "") {
       const busquedaLower = busqueda.toLowerCase();
-      
-      // Buscar en nombre y apellido
       const nombre = `${t.usuario?.nombre || ""} ${t.usuario?.apellido || ""}`.toLowerCase();
-      if (nombre.includes(busquedaLower)) {
-        // Continúa con el filtro de fecha
-      } else if (t.usuario?.email?.toLowerCase().includes(busquedaLower)) {
-        // Continúa con el filtro de fecha
-      } else if (t.usuario?.telefono?.includes(busqueda)) {
-        // Continúa con el filtro de fecha
-      } else {
-        // Buscar en servicios/productos
-        const servicios = t.productos?.map(p => p.nombreProducto?.toLowerCase()).join(" ");
-        if (servicios?.includes(busquedaLower)) {
-          // Continúa con el filtro de fecha
-        } else {
-          // Buscar en fecha
-          const fechaFormato = new Date(t.fecha).toLocaleDateString("es-AR");
-          if (!fechaFormato.includes(busqueda)) return false;
-        }
-      }
+      const enNombre = nombre.includes(busquedaLower);
+      const enEmail = t.usuario?.email?.toLowerCase().includes(busquedaLower);
+      const enTelefono = t.usuario?.telefono?.includes(busqueda);
+      const servicios = t.productos?.map(p => p.nombreProducto?.toLowerCase()).join(" ");
+      const enServicios = servicios?.includes(busquedaLower);
+      const fechaFormato = new Date(t.fecha).toLocaleDateString("es-AR");
+      const enFecha = fechaFormato.includes(busqueda);
+
+      if (!enNombre && !enEmail && !enTelefono && !enServicios && !enFecha) return false;
     }
 
-    // Filtro por fecha
     if (fechaFiltro.trim() !== "") {
       const fechaTurno = new Date(t.fecha);
       const fechaSeleccionada = new Date(fechaFiltro);
-      
-      // Comparar solo año, mes y día (ignorar hora)
       if (
         fechaTurno.getFullYear() !== fechaSeleccionada.getFullYear() ||
         fechaTurno.getMonth() !== fechaSeleccionada.getMonth() ||
@@ -171,7 +153,7 @@ const GestionTurnos = () => {
             className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100 text-sm"
           />
         </div>
-        
+
         <div className="relative">
           <Calendar size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           <input
@@ -181,7 +163,7 @@ const GestionTurnos = () => {
             className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100 text-sm"
           />
         </div>
-        
+
         {fechaFiltro && (
           <button
             onClick={() => setFechaFiltro("")}
@@ -205,14 +187,16 @@ const GestionTurnos = () => {
           <button
             key={id}
             onClick={() => setFiltro(id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${filtro === id
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+              filtro === id
                 ? "bg-pink-500 text-white shadow-md shadow-pink-200"
                 : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"
-              }`}
+            }`}
           >
             {label}
-            <span className={`text-xs px-1.5 py-0.5 rounded-full ${filtro === id ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
-              }`}>
+            <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+              filtro === id ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
+            }`}>
               {count}
             </span>
           </button>
@@ -243,14 +227,12 @@ const GestionTurnos = () => {
                 className="flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-50 transition"
                 onClick={() => setTurnoExpandido(turnoExpandido === turno._id ? null : turno._id)}
               >
-                {/* Avatar usuario */}
                 <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
                   <span className="text-pink-500 font-bold text-sm">
                     {turno.usuario?.nombre?.charAt(0).toUpperCase()}
                   </span>
                 </div>
 
-                {/* Info */}
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-gray-800">
                     {turno.usuario?.nombre} {turno.usuario?.apellido}
@@ -263,7 +245,6 @@ const GestionTurnos = () => {
                   </div>
                 </div>
 
-                {/* Estado + monto */}
                 <div className="flex flex-col items-end gap-1 flex-shrink-0">
                   <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${ESTADOS_COLOR[turno.estado]}`}>
                     {turno.estado.charAt(0).toUpperCase() + turno.estado.slice(1)}
@@ -278,18 +259,12 @@ const GestionTurnos = () => {
               {turnoExpandido === turno._id && (
                 <div className="border-t border-gray-100 p-4 bg-gray-50">
 
-                  {/* Información de cambios de horario */}
                   {turno.cambiosRealizados > 0 && (
                     <div className="mb-4 bg-blue-50 border border-blue-200 rounded-xl p-3">
                       <p className="text-xs text-blue-600 mb-2 font-semibold uppercase tracking-wide flex items-center gap-2">
                         <Clock size={14} />
                         Historial de cambios ({turno.cambiosRealizados}/{turno.cambiosRestantes || 2})
                       </p>
-                      <div className="flex items-center gap-3 text-sm">
-                        <span className="text-gray-400 line-through">{turno.horaInicio}</span>
-                        <span className="text-gray-300">→</span>
-                        <span className="text-green-600 font-semibold">{turno.horaInicio}</span>
-                      </div>
                       {turno.cambios && turno.cambios.length > 0 && (
                         <div className="mt-2 space-y-1">
                           {turno.cambios.map((cambio, idx) => (
@@ -303,7 +278,6 @@ const GestionTurnos = () => {
                     </div>
                   )}
 
-                  {/* Servicios */}
                   <div className="flex flex-col gap-2 mb-4">
                     {turno.productos?.map((p) => (
                       <div key={p._id} className="flex items-center gap-3 bg-white rounded-xl p-3">
@@ -316,26 +290,21 @@ const GestionTurnos = () => {
                     ))}
                   </div>
 
-                  {/* Datos del usuario */}
                   <div className="bg-white rounded-xl p-3 mb-4">
                     <p className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">Datos del cliente</p>
                     <div className="flex flex-col gap-1">
                       <p className="text-sm text-gray-700">
-                        <span className="text-gray-400">Email: </span>
-                        {turno.usuario?.email}
+                        <span className="text-gray-400">Email: </span>{turno.usuario?.email}
                       </p>
                       <p className="text-sm text-gray-700">
-                        <span className="text-gray-400">Teléfono: </span>
-                        {turno.usuario?.telefono}
+                        <span className="text-gray-400">Teléfono: </span>{turno.usuario?.telefono}
                       </p>
                       <p className="text-sm text-gray-700">
-                        <span className="text-gray-400">Método de pago: </span>
-                        {turno.metodoPago}
+                        <span className="text-gray-400">Método de pago: </span>{turno.metodoPago}
                       </p>
                     </div>
                   </div>
 
-                  {/* Comprobante */}
                   {turno.comprobante && (
                     <div className="mb-4">
                       <p className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">Comprobante</p>
@@ -349,7 +318,6 @@ const GestionTurnos = () => {
                     </div>
                   )}
 
-                  {/* Acciones */}
                   <div className="flex gap-2">
                     {["señado", "pendiente"].includes(turno.estado) && (
                       <button

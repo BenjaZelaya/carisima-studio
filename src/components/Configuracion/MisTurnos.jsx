@@ -33,7 +33,7 @@ const MisTurnos = () => {
 
   const cargar = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/mis-turnos`, {
+      const res = await fetch('http://localhost:5000/api/turnos/mis-turnos', {
         headers: { 'x-token': token },
       });
       const data = await res.json();
@@ -47,7 +47,7 @@ const MisTurnos = () => {
         if (turno.estado === 'confirmado') {
           try {
             const resCambios = await fetch(
-              `${import.meta.env.VITE_API_URL}/turnos/${turno._id}/cambios-disponibles`,
+              `http://localhost:5000/api/turnos/${turno._id}/cambios-disponibles`,
               { headers: { 'x-token': token } }
             );
             if (resCambios.ok) {
@@ -77,7 +77,7 @@ const MisTurnos = () => {
     if (!confirm("¿Cancelar este turno?")) return;
     setCancelando(id);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${id}/cancelar`, {
+      const res = await fetch(`http://localhost:5000/api/turnos/${id}/cancelar`, {
         method: 'PATCH',
         headers: { 'x-token': token },
       });
@@ -110,7 +110,7 @@ const MisTurnos = () => {
   }
 
   return (
-    <div className="max-w-2xl w-full">
+    <div className="max-w-2xl">
       <h1 className="text-2xl font-bold text-gray-800 mb-1">Mis Turnos</h1>
       <p className="text-gray-400 text-sm mb-8">Historial y próximas reservas</p>
 
