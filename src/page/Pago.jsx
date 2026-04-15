@@ -100,82 +100,83 @@ const Pago = () => {
     setTurnoPendiente(null);
     navigate("/reservar");
   };
-    // ─── Crear turno ──────────────────────────────────────────────────────────
 
-    const crearTurno = async (metodo) => {
-      if (turnoCreado) return turnoCreado;
-      setCargando(true);
-      setError(null);
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-token": token,
-          },
-          body: JSON.stringify({
-            productos: servicios.map((s) => s._id),
-            fecha,
-            horaInicio: horario,
-            metodoPago: metodo || metodoPago,
-            total,
-          }),
-        });
-        const data = await res.json();
-        if (!res.ok) { setError(data.msg || "Error al crear el turno"); return null; }
-        setTurnoCreado(data);
-        return data;
-      } catch {
-        setError("Error de conexión");
-        return null;
-      } finally {
-        setCargando(false);
+  // ─── Crear turno ──────────────────────────────────────────────────────────
+
+  const crearTurno = async (metodo) => {
+    if (turnoCreado) return turnoCreado;
+    setCargando(true);
+    setError(null);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-token": token,
+        },
+        body: JSON.stringify({
+          productos: servicios.map((s) => s._id),
+          fecha,
+          horaInicio: horario,
+          metodoPago: metodo || metodoPago,
+          total,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) { setError(data.msg || "Error al crear el turno"); return null; }
+      setTurnoCreado(data);
+      return data;
+    } catch {
+      setError("Error de conexión");
+      return null;
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  // ─── Mercado Pago ────────────────────────────────────────────────────────
+
+  const handlePagarConMP = async () => {
+    setCargandoMP(true);
+    setError(null);
+    try {
+      let turno = turnoCreado;
+      if (!turno) {
+        turno = await crearTurno("mercadopago");
+        if (!turno) return;
       }
-    };
 
-    // ─── Mercado Pago ────────────────────────────────────────────────────────
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/pagos/preferencia/${turno._id}`, {
+        method: "POST",
+        headers: { "x-token": token },
+      });
+      const data = await res.json();
+      if (!res.ok) { setError(data.msg || "Error al crear preferencia"); return; }
 
-    const handlePagarConMP = async () => {
-      setCargandoMP(true);
-      setError(null);
-      try {
-        let turno = turnoCreado;
-        if (!turno) {
-          turno = await crearTurno("mercadopago");
-          if (!turno) return;
-        }
+      window.location.href = data.sandboxInitPoint || data.initPoint;
+    } catch {
+      setError("Error de conexión con Mercado Pago");
+    } finally {
+      setCargandoMP(false);
+    }
+  };
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/pagos/preferencia/${turno._id}`, {
-          method: "POST",
-          headers: { "x-token": token },
-        });
-        const data = await res.json();
-        if (!res.ok) { setError(data.msg || "Error al crear preferencia"); return; }
+  // ─── Transferencia ────────────────────────────────────────────────────────
 
-        window.location.href = data.sandboxInitPoint || data.initPoint;
-      } catch {
-        setError("Error de conexión con Mercado Pago");
-      } finally {
-        setCargandoMP(false);
+  const handleSubirComprobante = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setSubiendoComprobante(true);
+    setError(null);
+    try {
+      let turno = turnoCreado;
+      if (!turno) {
+        turno = await crearTurno("transferencia");
+        if (!turno) return;
       }
-    };
 
-    // ─── Transferencia ────────────────────────────────────────────────────────
-
-    const handleSubirComprobante = async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      setSubiendoComprobante(true);
-      setError(null);
-      try {
-        let turno = turnoCreado;
-        if (!turno) {
-          turno = await crearTurno("transferencia");
-          if (!turno) return;
-        }
-
-        const formData = new FormData();
-        formData.append("img", file);
+      const formData = new FormData();
+      formData.append("img", file);
 
       console.log("📤 Subiendo comprobante para turno:", turno._id);
 
@@ -205,7 +206,7 @@ const Pago = () => {
     } finally {
       setSubiendoComprobante(false);
     }
-    };
+  };
 
   // ─── Modal de turno pendiente ──────────────────────────────────────────
 
@@ -246,124 +247,122 @@ const Pago = () => {
     );
   }
 
-    // Loading
-    if (cargandoTurnos) {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
-          <div className="text-center">
-            <div className="w-10 h-10 border-4 border-[#ff7bed] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-gray-600">Cargando...</p>
-          </div>
-        </div>
-      );
-    }
-
-    // Sin datos
-    if (servicios.length === 0 && !turnoCreado) return null;
-
-    // PÁGINA PRINCIPAL DE PAGO
+  // Loading
+  if (cargandoTurnos) {
     return (
-      <div className="min-h-screen bg-[#F8FAFC] px-6 py-10">
-        <div className="max-w-5xl mx-auto">
-
-          {/* Stepper */}
-          <div className="flex items-center gap-3 mb-8">
-            <button onClick={() => navigate("/horario", { state: { servicios } })}
-              className="p-2 rounded-full hover:bg-gray-100 transition text-gray-500">
-              ←
-            </button>
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <span className="text-gray-400">Servicios</span>
-              <span className="text-gray-300">→</span>
-              <span className="text-gray-400">Fecha y Hora</span>
-              <span className="text-gray-300">→</span>
-              <span className="text-[#ff7bed] font-bold">Pagar</span>
-            </div>
-          </div>
-
-          {/* Éxito transferencia */}
-          {exito && (
-            <div className="bg-green-50 border border-green-200 rounded-2xl p-6 mb-6 text-center">
-              <p className="text-2xl mb-2">🎉</p>
-              <p className="font-bold text-green-700 text-lg">¡Comprobante enviado!</p>
-              <p className="text-green-600 text-sm mt-1">
-                Tu turno está pendiente de confirmación. Te avisaremos por WhatsApp cuando esté confirmado.
-              </p>
-              <button onClick={() => navigate("/configuracion")}
-                className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-xl transition text-sm">
-                Ver mis turnos
-              </button>
-            </div>
-          )}
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
-              {error}
-            </div>
-          )}
-
-          <div className="flex flex-col lg:flex-row gap-6">
-
-            {/* Izquierda */}
-            <div className="flex-1 flex flex-col gap-6">
-              <ResumenPago servicios={servicios} fecha={fecha} horario={horario} />
-              <MetodoPago seleccionado={metodoPago} onChange={setMetodoPago} />
-            </div>
-
-            {/* Derecha */}
-            <div className="w-full lg:w-96 flex flex-col gap-4">
-              {metodoPago === "mercadopago" && (
-                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-800">Mercado Pago</h2>
-                      <p className="text-sm text-gray-500 mt-1">
-                        Pagá la seña de forma segura con tarjeta, efectivo o transferencia.
-                      </p>
-                    </div>
-                    <span className="text-3xl">💳</span>
-                  </div>
-
-                  <div className="bg-gray-50 rounded-xl p-4 mb-5">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-500">Monto a pagar</span>
-                      <span className="font-black text-[#ff7bed] text-lg">
-                        AR${seña.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={handlePagarConMP}
-                    disabled={cargandoMP || cargando}
-                    className="w-full flex items-center justify-center gap-3 py-4 rounded-xl bg-[#009ee3] hover:bg-[#008ccc] text-white font-bold transition disabled:opacity-60"
-                  >
-                    {cargandoMP ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <span className="text-xl">💳</span>
-                        Pagar con Mercado Pago
-                      </>
-                    )}
-                  </button>
-                </div>
-              )}
-
-              {metodoPago === "transferencia" && (
-                <InstruccionesTransferencia
-                  seña={seña}
-                  onSubirComprobante={handleSubirComprobante}
-                  comprobante={comprobante}
-                  subiendoComprobante={subiendoComprobante}
-                />
-              )}
-            </div>
-
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+        <div className="text-center">
+          <div className="w-10 h-10 border-4 border-[#ff7bed] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando...</p>
         </div>
       </div>
     );
-  };
+  }
 
-  export default Pago;
+  // Sin datos
+  if (servicios.length === 0 && !turnoCreado) return null;
+
+  // PÁGINA PRINCIPAL DE PAGO
+  return (
+    <div className="min-h-screen bg-[#F8FAFC] px-6 py-10">
+      <div className="max-w-5xl mx-auto">
+
+        {/* Stepper */}
+        <div className="flex items-center gap-3 mb-8">
+          <button onClick={() => navigate("/horario", { state: { servicios } })}
+            className="p-2 rounded-full hover:bg-gray-100 transition text-gray-500">
+            ←
+          </button>
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <span className="text-gray-400">Servicios</span>
+            <span className="text-gray-300">→</span>
+            <span className="text-gray-400">Fecha y Hora</span>
+            <span className="text-gray-300">→</span>
+            <span className="text-[#ff7bed] font-bold">Pagar</span>
+          </div>
+        </div>
+
+        {/* Éxito transferencia */}
+        {exito && (
+          <div className="bg-green-50 border border-green-200 rounded-2xl p-6 mb-6 text-center">
+            <p className="text-2xl mb-2">🎉</p>
+            <p className="font-bold text-green-700 text-lg">¡Comprobante enviado!</p>
+            <p className="text-green-600 text-sm mt-1">
+              Tu turno está pendiente de confirmación. Te avisaremos por WhatsApp cuando esté confirmado.
+            </p>
+            <button onClick={() => navigate("/configuracion")}
+              className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-xl transition text-sm">
+              Ver mis turnos
+            </button>
+          </div>
+        )}
+
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
+            {error}
+          </div>
+        )}
+
+        <div className="flex flex-col lg:flex-row gap-6">
+
+          {/* Izquierda */}
+          <div className="flex-1 flex flex-col gap-6">
+            <ResumenPago servicios={servicios} fecha={fecha} horario={horario} />
+            <MetodoPago seleccionado={metodoPago} onChange={setMetodoPago} />
+          </div>
+
+          {/* Derecha */}
+          <div className="w-full lg:w-96 flex flex-col gap-4">
+            {metodoPago === "mercadopago" && (
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h2 className="text-lg font-bold text-gray-800">Mercado Pago</h2>
+                    <p className="text-sm text-gray-500 mt-1">
+                      Pagá la seña de forma segura con tarjeta, efectivo o transferencia.
+                    </p>
+                  </div>
+                  <span className="text-3xl">💳</span>
+                </div>
+
+                <div className="bg-gray-50 rounded-xl p-4 mb-5">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-500">Monto a pagar</span>
+                    <span className="font-black text-[#ff7bed] text-lg">
+                      AR${seña.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={handlePagarConMP}
+                  disabled={cargandoMP || cargando}
+                  className="w-full flex items-center justify-center gap-3 py-4 rounded-xl bg-[#009ee3] hover:bg-[#008ccc] text-white font-bold transition disabled:opacity-60"
+                >
+                  {cargandoMP ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <span className="text-xl">💳</span>
+                      Pagar con Mercado Pago
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+
+            {metodoPago === "transferencia" && (
+              <InstruccionesTransferencia
+                seña={seña}
+                onSubirComprobante={handleSubirComprobante}
+                comprobante={comprobante}
+                subiendoComprobante={subiendoComprobante}
+              />
+            )}
+          </div>
+
+        </div>
+      </div>
+    </div>
+  );
+};
