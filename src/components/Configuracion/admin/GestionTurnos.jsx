@@ -1,7 +1,7 @@
 // src/components/Configuracion/admin/GestionTurnos.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext.jsx";
-import { Check, X, Clock, Calendar, User, Trash2, Search } from "lucide-react";
+import { Check, X, Clock, Calendar, Trash2, Search } from "lucide-react";
 
 const ESTADOS_COLOR = {
   pendiente: "bg-yellow-100 text-yellow-700",
@@ -32,9 +32,17 @@ const GestionTurnos = () => {
         headers: { "x-token": token },
       });
       const data = await res.json();
-      setTurnos(data.turnos || data || []);
+
+      if (!res.ok) {
+        setError(data.msg || "Error al cargar turnos");
+        setTurnos([]);
+        return;
+      }
+
+      setTurnos(Array.isArray(data.turnos) ? data.turnos : Array.isArray(data) ? data : []);
     } catch {
       setError("Error al cargar turnos");
+      setTurnos([]);
     } finally {
       setCargando(false);
     }
@@ -222,7 +230,6 @@ const GestionTurnos = () => {
               key={turno._id}
               className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
             >
-              {/* Header del turno */}
               <div
                 className="flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-50 transition"
                 onClick={() => setTurnoExpandido(turnoExpandido === turno._id ? null : turno._id)}
@@ -255,7 +262,6 @@ const GestionTurnos = () => {
                 </div>
               </div>
 
-              {/* Detalle expandido */}
               {turnoExpandido === turno._id && (
                 <div className="border-t border-gray-100 p-4 bg-gray-50">
 
