@@ -177,64 +177,74 @@ const Pago = () => {
         const formData = new FormData();
         formData.append("img", file);
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${turno._id}/subir-comprobante`, {
-          method: "POST",
-          headers: { "x-token": token },
-          body: formData,
-        });
-        const data = await res.json();
-        if (!res.ok) { setError(data.msg || "Error al subir el comprobante"); return; }
+      console.log("📤 Subiendo comprobante para turno:", turno._id);
 
-        setComprobante(data.comprobante);
-        setTurnoCreado(data);
-        setExito(true);
-      } catch {
-        setError("Error de conexión");
-      } finally {
-        setSubiendoComprobante(false);
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${turno._id}/subir-comprobante`, {
+        method: "POST",
+        headers: { "x-token": token },
+        body: formData,
+      });
+      
+      console.log("📨 Response status:", res.status);
+      const data = await res.json();
+      console.log("📦 Response data:", data);
+      
+      if (!res.ok) { 
+        console.error("❌ Error response:", data);
+        setError(data.msg || "Error al subir el comprobante"); 
+        return; 
       }
+
+      console.log("✅ Comprobante subido correctamente");
+      setComprobante(data.comprobante || data.img);
+      setTurnoCreado(data);
+      setExito(true);
+    } catch (err) {
+      console.error("❌ Error al subir comprobante:", err);
+      setError("Error al subir el comprobante");
+    } finally {
+      setSubiendoComprobante(false);
+    }
     };
 
-    // ─── Render ──────────────────────────────────────────────────────────────
+  // ─── Modal de turno pendiente ──────────────────────────────────────────
 
-    // Modal: MOSTRAR TURNO PENDIENTE
-    if (turnoPendiente && !turnoCreado) {
-      return (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 animate-in">
-            <div className="text-center mb-6">
-              <div className="text-5xl mb-4">⏳</div>
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">¿Continuar con tu reserva?</h2>
-              <p className="text-gray-600 text-sm">
-                Encontramos una reserva pendiente de pago. ¿Deseas continuar pagándola o hacer una nueva reserva?
-              </p>
-            </div>
+  if (turnoPendiente && !turnoCreado) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-lg p-8 max-w-md">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">¿Continuar con tu reserva?</h2>
+            <p className="text-gray-600 text-sm">
+              Encontramos una reserva pendiente de pago. ¿Deseas continuar pagándola o hacer una nueva reserva?
+            </p>
+          </div>
 
-            <div className="bg-gray-50 rounded-xl p-4 mb-6 space-y-2">
-              <p className="text-sm"><strong>Fecha:</strong> {new Date(turnoPendiente.fecha).toLocaleDateString("es-AR")}</p>
-              <p className="text-sm"><strong>Hora:</strong> {turnoPendiente.horaInicio}</p>
-              <p className="text-sm"><strong>Servicios:</strong> {turnoPendiente.productos?.length || 0}</p>
-              <p className="text-sm font-bold text-[#ff7bed]">Monto: AR${Math.round((turnoPendiente.total || 0) * 0.5).toLocaleString()}</p>
-            </div>
+          <div className="bg-gray-50 rounded-xl p-4 mb-6 space-y-2">
+            <p className="text-sm"><strong>Fecha:</strong> {new Date(turnoPendiente.fecha).toLocaleDateString("es-AR")}</p>
+            <p className="text-sm"><strong>Hora:</strong> {turnoPendiente.horaInicio}</p>
+            <p className="text-sm"><strong>Servicios:</strong> {turnoPendiente.productos?.length || 0}</p>
+            <p className="text-sm font-bold text-[#ff7bed]">Monto: AR${Math.round((turnoPendiente.total || 0) * 0.5).toLocaleString()}</p>
+          </div>
 
-            <div className="flex gap-3">
-              <button
-                onClick={handleContinuarReserva}
-                className="flex-1 bg-[#ff7bed] hover:bg-[#ff6bd8] text-white font-bold py-3 rounded-xl transition"
-              >
-                Continuar pagando
-              </button>
-              <button
-                onClick={handleNuevaReserva}
-                className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-xl transition"
-              >
-                Nueva reserva
-              </button>
-            </div>
+          <div className="flex gap-3">
+            <button
+              onClick={handleContinuarReserva}
+              className="flex-1 bg-[#ff7bed] hover:bg-[#ff6bd8] text-white font-bold py-3 rounded-xl transition"
+            >
+              Continuar pagando
+            </button>
+            <button
+              onClick={handleNuevaReserva}
+              className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 rounded-xl transition"
+            >
+              Nueva reserva
+            </button>
           </div>
         </div>
-      );
-    }
+      </div>
+    );
+  }
 
     // Loading
     if (cargandoTurnos) {
