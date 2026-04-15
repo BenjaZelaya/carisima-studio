@@ -1477,7 +1477,4 @@ const Pago = () => {
   );
 };
 
- 
- e x p o r t   d e f a u l t   P a g o ; 
- 
- 
+export default Pago;
