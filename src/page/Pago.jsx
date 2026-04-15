@@ -144,13 +144,19 @@ const Pago = () => {
   const handleSubirComprobante = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     setSubiendoComprobante(true);
     setError(null);
+
     try {
       let turno = turnoCreado;
       if (!turno) {
         turno = await crearTurno("transferencia");
-        if (!turno) return;
+        if (!turno) {
+          setError("Error al crear el turno. Intenta de nuevo.");
+          setSubiendoComprobante(false);
+          return;
+        }
       }
 
       const formData = new FormData();
@@ -170,7 +176,8 @@ const Pago = () => {
       
       if (!res.ok) { 
         console.error("❌ Error response:", data);
-        setError(data.msg || "Error al subir el comprobante"); 
+        setError(data.msg || "Error al subir el comprobante");
+        setSubiendoComprobante(false);
         return; 
       }
 
@@ -178,10 +185,10 @@ const Pago = () => {
       setComprobante(data.comprobante || data.img);
       setTurnoCreado(data);
       setExito(true);
+      setSubiendoComprobante(false);
     } catch (err) {
       console.error("❌ Error al subir comprobante:", err);
       setError("Error al subir el comprobante");
-    } finally {
       setSubiendoComprobante(false);
     }
   };
