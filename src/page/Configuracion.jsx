@@ -1,5 +1,6 @@
 // src/page/Configuracion.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { User, Calendar, Settings, LogOut } from "lucide-react";
 import MiPerfil from "../components/Configuracion/MiPerfil.jsx";
@@ -13,11 +14,27 @@ const tabs = [
 
 const Configuracion = () => {
   const { usuario, logout, esAdmin } = useAuth();
-  const [tabActivo, setTabActivo] = useState("perfil");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [tabActivo, setTabActivo] = useState(() => {
+    const tabParam = searchParams.get("tab");
+    return tabParam || "perfil";
+  });
 
   const tabsVisibles = esAdmin
     ? [...tabs, { id: "admin", label: "Admin", icon: Settings }]
     : tabs;
+
+  const handleTabChange = (tabId) => {
+    setTabActivo(tabId);
+    setSearchParams({ tab: tabId });
+  };
+
+  useEffect(() => {
+    const tabParam = searchParams.get("tab");
+    if (tabParam && tabParam !== tabActivo) {
+      setTabActivo(tabParam);
+    }
+  }, [searchParams, tabActivo]);
 
   const renderContenido = () => {
     switch (tabActivo) {
@@ -50,7 +67,7 @@ const Configuracion = () => {
           {tabsVisibles.map(({ id, label, icon: Icon }) => (
             <button
               key={id}
-              onClick={() => setTabActivo(id)}
+              onClick={() => handleTabChange(id)}
               className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm whitespace-nowrap transition ${
                 tabActivo === id
                   ? "bg-[#ff7bed] text-white shadow"
@@ -92,7 +109,7 @@ const Configuracion = () => {
             {tabsVisibles.map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
-                onClick={() => setTabActivo(id)}
+                onClick={() => handleTabChange(id)}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                   tabActivo === id
                     ? "bg-pink-50 text-pink-500"
