@@ -122,13 +122,9 @@ const GestionTurnos = () => {
     }
 
     if (fechaFiltro.trim() !== "") {
-      const fechaTurno = new Date(t.fecha);
-      const fechaSeleccionada = new Date(fechaFiltro);
-      if (
-        fechaTurno.getFullYear() !== fechaSeleccionada.getFullYear() ||
-        fechaTurno.getMonth() !== fechaSeleccionada.getMonth() ||
-        fechaTurno.getDate() !== fechaSeleccionada.getDate()
-      ) {
+      // Comparar como strings YYYY-MM-DD para evitar problemas de zona horaria
+      const fechaTurnoStr = new Date(t.fecha).toISOString().split("T")[0];
+      if (fechaTurnoStr !== fechaFiltro) {
         return false;
       }
     }

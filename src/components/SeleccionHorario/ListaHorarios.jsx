@@ -10,9 +10,7 @@ const ListaHorarios = ({ turnos, horarioSeleccionado, onSeleccionar }) => {
 
   const formatearHora = (hora) => {
     const [h, m] = hora.split(":").map(Number);
-    const periodo = h >= 12 ? "PM" : "AM";
-    const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
-    return { hora: `${h12}:${m.toString().padStart(2, "0")}`, periodo };
+    return { hora: `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}` };
   };
 
   // Normaliza para manejar tanto strings como objetos { hora, ocupado }
@@ -30,7 +28,7 @@ const ListaHorarios = ({ turnos, horarioSeleccionado, onSeleccionar }) => {
         style={{ scrollbarWidth: "thin", scrollbarColor: "#ff7bed transparent" }}
       >
         {turnosNormalizados.map(({ hora, ocupado }) => {
-          const { hora: horaFormateada, periodo } = formatearHora(hora);
+          const { hora: horaFormateada } = formatearHora(hora);
           const esSeleccionado = horarioSeleccionado === hora;
 
           return (
@@ -56,17 +54,6 @@ const ListaHorarios = ({ turnos, horarioSeleccionado, onSeleccionar }) => {
                     Reservado
                   </span>
                 )}
-                <span
-                  className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                    ocupado
-                      ? "bg-gray-100 text-gray-300"
-                      : esSeleccionado
-                      ? "bg-[#ff7bed]/20 text-[#ff7bed]"
-                      : "bg-gray-200 text-gray-500"
-                  }`}
-                >
-                  {periodo}
-                </span>
               </div>
             </button>
           );
