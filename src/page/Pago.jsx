@@ -133,7 +133,7 @@ const Pago = () => {
       const data = await res.json();
       if (!res.ok) { setError(data.msg || "Error al crear preferencia"); return; }
 
-      window.location.href = data.sandboxInitPoint || data.initPoint;
+      window.location.href = data.initPoint || data.sandboxInitPoint;
     } catch {
       setError("Error de conexión con Mercado Pago");
     } finally {
