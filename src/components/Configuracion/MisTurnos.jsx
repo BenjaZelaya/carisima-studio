@@ -71,6 +71,13 @@ const MisTurnos = () => {
 
   useEffect(() => {
     if (token) cargar();
+    
+    // Polling cada 5 segundos para actualizar automáticamente cuando se procesa un pago
+    const intervalo = setInterval(() => {
+      if (token) cargar();
+    }, 5000);
+    
+    return () => clearInterval(intervalo);
   }, [token]);
 
   const handleCancelar = async (id) => {

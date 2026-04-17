@@ -309,14 +309,31 @@ const GestionTurnos = () => {
 
                   {turno.comprobante && (
                     <div className="mb-4">
-                      <p className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">Comprobante</p>
-                      <a href={turno.comprobante} target="_blank" rel="noopener noreferrer">
-                        <img
-                          src={turno.comprobante}
-                          alt="comprobante"
-                          className="w-full max-h-48 object-contain rounded-xl border border-gray-200 hover:opacity-90 transition"
-                        />
-                      </a>
+                      {turno.metodoPago === "mercadopago" ? (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                          <p className="text-xs text-blue-600 font-medium mb-2 uppercase tracking-wide">Comprobante Mercado Pago</p>
+                          <p className="text-sm text-blue-700 font-mono break-all mb-2">{turno.comprobante}</p>
+                          <a 
+                            href={`https://www.mercadopago.com.ar/activities/${turno.comprobante}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-500 hover:underline inline-block"
+                          >
+                            Ver en Mercado Pago →
+                          </a>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">Comprobante</p>
+                          <a href={turno.comprobante} target="_blank" rel="noopener noreferrer">
+                            <img
+                              src={turno.comprobante}
+                              alt="comprobante"
+                              className="w-full max-h-48 object-contain rounded-xl border border-gray-200 hover:opacity-90 transition"
+                            />
+                          </a>
+                        </>
+                      )}
                     </div>
                   )}
 
