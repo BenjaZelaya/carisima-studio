@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/AuthContext.jsx";
 import { Check, X, Clock, Calendar, Trash2, Search } from "lucide-react";
 
 const ESTADOS_COLOR = {
+  borrador: "bg-gray-100 text-gray-600",
   pendiente: "bg-yellow-100 text-yellow-700",
   señado: "bg-blue-100 text-blue-700",
   confirmado: "bg-green-100 text-green-700",
@@ -184,7 +185,7 @@ const GestionTurnos = () => {
           { id: "todos", label: "Todos", count: turnos.length },
           { id: "cambios", label: "Con cambios de horario", count: contarConCambios() },
           { id: "señado", label: "Con comprobante", count: contarPorEstado("señado") },
-          { id: "pendiente", label: "Pendientes", count: contarPorEstado("pendiente") },
+          { id: "borrador", label: "Pendientes de pago", count: contarPorEstado("borrador") },
           { id: "confirmado", label: "Confirmados", count: contarPorEstado("confirmado") },
           { id: "cancelado", label: "Cancelados", count: contarPorEstado("cancelado") },
         ].map(({ id, label, count }) => (
@@ -338,7 +339,7 @@ const GestionTurnos = () => {
                   )}
 
                   <div className="flex gap-2">
-                    {["señado", "pendiente"].includes(turno.estado) && (
+                    {["señado", "borrador"].includes(turno.estado) && (
                       <button
                         onClick={() => handleConfirmar(turno._id)}
                         className="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 rounded-xl transition text-sm"
@@ -347,7 +348,7 @@ const GestionTurnos = () => {
                         Confirmar turno
                       </button>
                     )}
-                    {["pendiente", "señado", "confirmado"].includes(turno.estado) && (
+                    {["borrador", "señado", "confirmado"].includes(turno.estado) && (
                       <button
                         onClick={() => handleCancelar(turno._id)}
                         className="flex-1 flex items-center justify-center gap-2 border border-red-200 text-red-500 hover:bg-red-50 font-semibold py-2.5 rounded-xl transition text-sm"

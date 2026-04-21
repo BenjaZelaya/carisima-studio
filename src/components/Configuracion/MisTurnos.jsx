@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext.jsx';
 import CambiarHorarioModal from './CambiarHorarioModal';
 
 const ESTADOS_COLOR = {
+  borrador: 'bg-gray-100 text-gray-600 border-gray-200',
   confirmado: 'bg-green-100 text-green-700 border-green-200',
   señado: 'bg-blue-100 text-blue-700 border-blue-200',
   pendiente: 'bg-yellow-100 text-yellow-700 border-yellow-200',
@@ -213,7 +214,7 @@ const MisTurnos = () => {
                     Cambiar horario
                   </button>
                 )}
-                {["pendiente", "señado", "confirmado"].includes(turno.estado) && (
+                {["borrador", "señado", "confirmado"].includes(turno.estado) && (
                   <button
                     onClick={() => handleCancelar(turno._id)}
                     disabled={cancelando === turno._id}
