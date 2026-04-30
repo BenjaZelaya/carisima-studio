@@ -154,7 +154,6 @@ const Pago = () => {
         turno = await crearTurno("transferencia");
         if (!turno) {
           setError("Error al crear el turno. Intenta de nuevo.");
-          setSubiendoComprobante(false);
           return;
         }
       }
@@ -164,31 +163,50 @@ const Pago = () => {
 
       console.log("📤 Subiendo comprobante para turno:", turno._id);
 
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${turno._id}/subir-comprobante`, {
-        method: "POST",
-        headers: { "x-token": token },
-        body: formData,
-      });
-      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+      let res;
+      try {
+        res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${turno._id}/subir-comprobante`, {
+          method: "POST",
+          headers: { "x-token": token },
+          body: formData,
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
+
       console.log("📨 Response status:", res.status);
-      const data = await res.json();
+
+      let data = {};
+      try {
+        data = await res.json();
+      } catch {
+        // respuesta sin JSON válido
+      }
+
       console.log("📦 Response data:", data);
-      
-      if (!res.ok) { 
+
+      if (!res.ok) {
         console.error("❌ Error response:", data);
-        setError(data.msg || "Error al subir el comprobante");
-        setSubiendoComprobante(false);
-        return; 
+        setError(data.msg || `Error al subir el comprobante (${res.status})`);
+        return;
       }
 
       console.log("✅ Comprobante subido correctamente");
-      setComprobante(data.comprobante || data.img);
+      setComprobante(data.comprobante || data.img || "ok");
       setTurnoCreado(data);
       setExito(true);
-      setSubiendoComprobante(false);
     } catch (err) {
       console.error("❌ Error al subir comprobante:", err);
-      setError("Error al subir el comprobante");
+      if (err.name === "AbortError") {
+        setError("La subida tardó demasiado. Verificá tu conexión e intentá de nuevo.");
+      } else {
+        setError("Error al subir el comprobante. Intentá de nuevo.");
+      }
+    } finally {
       setSubiendoComprobante(false);
     }
   };
