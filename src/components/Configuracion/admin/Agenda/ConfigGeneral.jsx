@@ -20,6 +20,7 @@ const ConfigGeneral = ({ onActualizar }) => {
     horaFin: "18:00",
     duracionTurno: 60,
     diasLaborales: [1, 2, 3, 4, 5],
+    capacidadPorTurno: 1,
   });
   const [cargando, setCargando] = useState(false);
   const [exito, setExito] = useState(null);
@@ -35,6 +36,7 @@ const ConfigGeneral = ({ onActualizar }) => {
           horaFin: data.horaFin || "18:00",
           duracionTurno: data.duracionTurno || 60,
           diasLaborales: data.diasLaborales || [1, 2, 3, 4, 5],
+          capacidadPorTurno: data.capacidadPorTurno || 1,
         });
       } catch {
         setError("Error al cargar configuración");
@@ -133,6 +135,19 @@ const ConfigGeneral = ({ onActualizar }) => {
             <option value={90}>1 hora 30 minutos</option>
             <option value={120}>2 horas</option>
           </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Personas por turno (capacidad)</label>
+          <input
+            type="number"
+            min={1}
+            max={20}
+            value={form.capacidadPorTurno}
+            onChange={(e) => setForm({ ...form, capacidadPorTurno: Number(e.target.value) })}
+            className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"
+          />
+          <p className="text-xs text-gray-400 mt-1">Cuántas personas pueden reservar el mismo horario</p>
         </div>
 
         <button type="submit" disabled={cargando}
