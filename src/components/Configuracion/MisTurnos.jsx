@@ -42,7 +42,8 @@ const MisTurnos = () => {
       const data = await res.json();
       if (!res.ok) { setError("Error al cargar tus turnos."); return; }
       
-      const turnosData = data.data || data.turnos || (Array.isArray(data) ? data : []);
+      const turnosRaw = data.data || data.turnos || (Array.isArray(data) ? data : []);
+      const turnosData = turnosRaw.filter((t) => t.estado !== 'borrador');
 
       // Detectar turnos que cambiaron a "confirmado" desde el último poll
       const nuevosConfirmados = turnosData.filter((t) => {

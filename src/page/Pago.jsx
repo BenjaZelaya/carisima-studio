@@ -154,6 +154,7 @@ const Pago = () => {
         turno = await crearTurno("transferencia");
         if (!turno) {
           setError("Error al crear el turno. Intenta de nuevo.");
+          setSubiendoComprobante(false);
           return;
         }
       }
@@ -170,20 +171,14 @@ const Pago = () => {
       });
 
       console.log("📨 Response status:", res.status);
-
-      let data = {};
-      try {
-        data = await res.json();
-      } catch {
-        // respuesta sin JSON válido
-      }
-
+      const data = await res.json();
       console.log("📦 Response data:", data);
 
       if (!res.ok) {
         console.error("❌ Error response:", data);
-        setError(data.msg || `Error al subir el comprobante (${res.status})`);
-        return;
+        setError(data.msg || "Error al subir el comprobante");
+        setSubiendoComprobante(false);
+        return; 
       }
 
       console.log("✅ Comprobante subido correctamente");
@@ -285,6 +280,20 @@ const Pago = () => {
             <span className="text-[#ff7bed] font-bold">Pagar</span>
           </div>
         </div>
+
+        {exito && (
+          <div className="bg-green-50 border border-green-200 rounded-2xl p-6 mb-6 text-center">
+            <p className="text-2xl mb-2">🎉</p>
+            <p className="font-bold text-green-700 text-lg">¡Comprobante enviado!</p>
+            <p className="text-green-600 text-sm mt-1">
+              Tu turno está pendiente de confirmación. Te avisaremos por WhatsApp cuando esté confirmado.
+            </p>
+            <button onClick={() => navigate("/configuracion")}
+              className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-xl transition text-sm">
+              Ver mis turnos
+            </button>
+          </div>
+        )}
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
