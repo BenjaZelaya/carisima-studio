@@ -1,18 +1,22 @@
 ﻿// src/components/Configuracion/PanelAdmin.jsx
 import { useState } from "react";
-import { Package, Tag, Calendar, CalendarDays, Users } from "lucide-react";
+import { Package, Tag, Calendar, CalendarDays, Users, Layers, ShoppingBag } from "lucide-react";
 import GestionProductos from "./admin/GestionProductos.jsx";
 import GestionCategorias from "./admin/GestionCategorias.jsx";
 import GestionTurnos from "./admin/GestionTurnos.jsx";
 import AgendaAdmin from "./admin/AgendaAdmin.jsx";
 import GestionUsuarios from "./admin/GestionUsuarios.jsx";
+import GestionPacks from "./admin/GestionPacks.jsx";
+import GestionPackCompras from "./admin/GestionPackCompras.jsx";
 
 const TABS = [
-  { id: "turnos",     label: "Turnos",      icon: Calendar },
-  { id: "agenda",     label: "Agenda",      icon: CalendarDays },
-  { id: "productos",  label: "Servicios",   icon: Package },
-  { id: "categorias", label: "CategorÃ­as",  icon: Tag },
-  { id: "usuarios",   label: "Usuarios",    icon: Users },
+  { id: "turnos",      label: "Turnos",          icon: Calendar },
+  { id: "agenda",      label: "Agenda",           icon: CalendarDays },
+  { id: "productos",   label: "Servicios",        icon: Package },
+  { id: "categorias",  label: "Categorías",       icon: Tag },
+  { id: "packs",       label: "Catálogo Packs",   icon: Layers },
+  { id: "packCompras", label: "Packs Vendidos",   icon: ShoppingBag },
+  { id: "usuarios",    label: "Usuarios",         icon: Users },
 ];
 
 const PanelAdmin = () => {
@@ -56,11 +60,13 @@ const PanelAdmin = () => {
 
       {/* Content */}
       <div className="flex-1 px-8 py-8">
-        {seccion === "turnos"     && <GestionTurnos />}
-        {seccion === "agenda"     && <AgendaAdmin />}
-        {seccion === "productos"  && <GestionProductos />}
-        {seccion === "categorias" && <GestionCategorias />}
-        {seccion === "usuarios"   && <GestionUsuarios />}
+        {seccion === "turnos"      && <GestionTurnos />}
+        {seccion === "agenda"      && <AgendaAdmin />}
+        {seccion === "productos"   && <GestionProductos />}
+        {seccion === "categorias"  && <GestionCategorias />}
+        {seccion === "packs"       && <GestionPacks />}
+        {seccion === "packCompras" && <GestionPackCompras />}
+        {seccion === "usuarios"    && <GestionUsuarios />}
       </div>
     </div>
   );

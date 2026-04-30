@@ -3,12 +3,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ListaServicios from "../components/Reservar/ListaServicios.jsx";
 import ResumenReserva from "../components/Reservar/ResumenReserva.jsx";
+import TarjetaPack from "../components/Packs/TarjetaPack.jsx";
 
 const Reservar = () => {
   const navigate = useNavigate();
 
   const [servicios, setServicios] = useState([]);
   const [categorias, setCategorias] = useState([]);
+  const [packs, setPacks] = useState([]);
+  const [tabActivo, setTabActivo] = useState("servicios"); // "servicios" | "packs"
   const [seleccionados, setSeleccionados] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [categoriaActiva, setCategoriaActiva] = useState(null);
@@ -19,14 +22,17 @@ const Reservar = () => {
   useEffect(() => {
     const cargar = async () => {
       try {
-        const [resProductos, resCategorias] = await Promise.all([
+        const [resProductos, resCategorias, resPacks] = await Promise.all([
           fetch(`${import.meta.env.VITE_API_URL}/productos`),
           fetch(`${import.meta.env.VITE_API_URL}/categorias`),
+          fetch(`${import.meta.env.VITE_API_URL}/packs`),
         ]);
         const dataProductos = await resProductos.json();
         const dataCategorias = await resCategorias.json();
+        const dataPacks = await resPacks.json();
         setServicios(dataProductos.productos || []);
         setCategorias(dataCategorias.categorias || []);
+        setPacks(dataPacks.packs || []);
       } catch {
         setError("No se pudieron cargar los servicios.");
       } finally {
@@ -88,11 +94,55 @@ const Reservar = () => {
           </p>
         </div>
 
-        {/* LAYOUT RESPONSIVE */}
-        <div className="lg:grid lg:grid-cols-3 lg:gap-8">
-          
-          {/* IZQUIERDA - SERVICIOS */}
-          <div className="lg:col-span-2">
+        {/* SELECTOR DE TABS */}
+        <div className="flex gap-0 border-b border-white/10 mb-8">
+          <button
+            onClick={() => setTabActivo("servicios")}
+            className={`px-5 py-3 text-[10px] tracking-[0.15em] uppercase font-medium border-b-2 transition-all ${
+              tabActivo === "servicios"
+                ? "border-white text-white"
+                : "border-transparent text-white/30 hover:text-white/60"
+            }`}
+          >
+            Servicios sueltos
+          </button>
+          <button
+            onClick={() => setTabActivo("packs")}
+            className={`px-5 py-3 text-[10px] tracking-[0.15em] uppercase font-medium border-b-2 transition-all ${
+              tabActivo === "packs"
+                ? "border-white text-white"
+                : "border-transparent text-white/30 hover:text-white/60"
+            }`}
+          >
+            Packs
+            {packs.length > 0 && (
+              <span className="ml-1.5 text-[9px] text-white/25">({packs.length})</span>
+            )}
+          </button>
+        </div>
+
+        {/* CONTENIDO PACKS */}
+        {tabActivo === "packs" && (
+          <div>
+            {packs.length === 0 ? (
+              <div className="border border-white/8 py-12 text-center">
+                <p className="text-xs text-white/25">No hay packs disponibles por el momento</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {packs.map((pack) => (
+                  <TarjetaPack key={pack._id} pack={pack} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* LAYOUT RESPONSIVE (solo en tab servicios) */}
+        {tabActivo === "servicios" && (
+          <div className="lg:grid lg:grid-cols-3 lg:gap-8">
+            {/* IZQUIERDA - SERVICIOS */}
+            <div className="lg:col-span-2">
             <div
               className={`transition-all duration-300 ${
                 mostrarResumen
@@ -125,7 +175,9 @@ const Reservar = () => {
             </div>
           </div>
 
-        </div>
+          </div>
+
+        )}
       </div>
 
       {/* ===== MOBILE ===== */}

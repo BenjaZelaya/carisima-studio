@@ -2,19 +2,22 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
-import { User, Calendar, Settings2, LogOut, Menu, X } from "lucide-react";
+import { User, Calendar, Settings2, LogOut, Menu, X, ShoppingBag } from "lucide-react";
 import MiPerfil from "../components/Configuracion/MiPerfil.jsx";
 import MisTurnos from "../components/Configuracion/MisTurnos.jsx";
+import MisPacks from "../components/Configuracion/MisPacks.jsx";
 import PanelAdmin from "../components/Configuracion/PanelAdmin.jsx";
 
 const TABS_USER = [
   { id: "perfil", label: "Perfil", icon: User },
   { id: "turnos", label: "Mis Turnos", icon: Calendar },
+  { id: "packs", label: "Mis Packs", icon: ShoppingBag },
 ];
 
 const TABS_ADMIN = [
   { id: "perfil", label: "Perfil", icon: User },
   { id: "turnos", label: "Mis Turnos", icon: Calendar },
+  { id: "packs", label: "Mis Packs", icon: ShoppingBag },
   { id: "admin", label: "Panel Admin", icon: Settings2 },
 ];
 
@@ -41,6 +44,7 @@ const Configuracion = () => {
     switch (tabActivo) {
       case "perfil":  return <MiPerfil />;
       case "turnos":  return <MisTurnos />;
+      case "packs":   return <MisPacks />;
       case "admin":   return <PanelAdmin />;
       default:        return <MiPerfil />;
     }

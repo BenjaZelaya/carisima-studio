@@ -2,21 +2,28 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
+import TarjetaPack from "../components/Packs/TarjetaPack.jsx";
 
 const Servicios = () => {
   const { estaLogueado } = useAuth();
   const navigate = useNavigate();
 
   const [productos, setProductos] = useState([]);
+  const [packs, setPacks] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [seleccionado, setSeleccionado] = useState(null);
 
   useEffect(() => {
     const cargar = async () => {
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/productos`);
-        const data = await res.json();
-        setProductos(data.productos || []);
+        const [resProductos, resPacks] = await Promise.all([
+          fetch(`${import.meta.env.VITE_API_URL}/productos`),
+          fetch(`${import.meta.env.VITE_API_URL}/packs`),
+        ]);
+        const dataProductos = await resProductos.json();
+        const dataPacks = await resPacks.json();
+        setProductos(dataProductos.productos || []);
+        setPacks(dataPacks.packs || []);
       } catch (error) {
         console.error("Error al cargar productos:", error);
       } finally {
@@ -106,6 +113,26 @@ const Servicios = () => {
           </div>
         )}
       </div>
+
+      {/* SECCIÓN PACKS */}
+      {packs.length > 0 && (
+        <div className="max-w-6xl mx-auto mt-24 px-6 pb-16">
+          <div className="mb-12">
+            <p className="text-xs tracking-widest uppercase text-white/30 mb-4 font-sans">Packs</p>
+            <h2 className="font-serif text-4xl sm:text-5xl font-light text-white">
+              Packs de sesiones
+            </h2>
+            <p className="text-white/40 text-sm mt-4 max-w-md leading-relaxed">
+              Comprá un pack y agendá tus sesiones cuando quieras. Una seña única y el resto en el local.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {packs.map((pack) => (
+              <TarjetaPack key={pack._id} pack={pack} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* MODAL */}
       {seleccionado && (
