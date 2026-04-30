@@ -1,6 +1,6 @@
 // src/components/Configuracion/MisTurnos.jsx
-import { useState, useEffect } from 'react';
-import { Calendar, Clock, X, Edit2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Calendar, Clock, X, Edit2, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import CambiarHorarioModal from './CambiarHorarioModal';
 
@@ -31,6 +31,8 @@ const MisTurnos = () => {
   const [cambiosDisponibles, setCambiosDisponibles] = useState({});
   const [modalAbierto, setModalAbierto] = useState(false);
   const [turnoSeleccionado, setTurnoSeleccionado] = useState(null);
+  const [notificaciones, setNotificaciones] = useState([]);
+  const prevEstadosRef = useRef({});
 
   const cargar = async () => {
     try {
@@ -41,6 +43,31 @@ const MisTurnos = () => {
       if (!res.ok) { setError("Error al cargar tus turnos."); return; }
       
       const turnosData = data.data || data.turnos || (Array.isArray(data) ? data : []);
+
+      // Detectar turnos que cambiaron a "confirmado" desde el último poll
+      const nuevosConfirmados = turnosData.filter((t) => {
+        const estadoAnterior = prevEstadosRef.current[t._id];
+        return t.estado === 'confirmado' && estadoAnterior && estadoAnterior !== 'confirmado';
+      });
+
+      if (nuevosConfirmados.length > 0) {
+        const nuevas = nuevosConfirmados.map((t) => ({
+          id: t._id + Date.now(),
+          mensaje: `¡Tu turno del ${formatearFecha(t.fecha)} a las ${t.horaInicio}hs fue confirmado!`,
+        }));
+        setNotificaciones((prev) => [...prev, ...nuevas]);
+        nuevas.forEach((n) => {
+          setTimeout(() => {
+            setNotificaciones((prev) => prev.filter((x) => x.id !== n.id));
+          }, 8000);
+        });
+      }
+
+      // Guardar estados actuales para la próxima comparación
+      const nuevosEstados = {};
+      turnosData.forEach((t) => { nuevosEstados[t._id] = t.estado; });
+      prevEstadosRef.current = nuevosEstados;
+
       setTurnos(turnosData);
       
       // Cargar info de cambios disponibles para cada turno confirmado
@@ -121,6 +148,21 @@ const MisTurnos = () => {
     <div className="max-w-2xl">
       <h1 className="text-2xl font-bold text-gray-800 mb-1">Mis Turnos</h1>
       <p className="text-gray-400 text-sm mb-8">Historial y próximas reservas</p>
+
+      {/* Notificaciones de confirmación */}
+      {notificaciones.length > 0 && (
+        <div className="flex flex-col gap-2 mb-6">
+          {notificaciones.map((n) => (
+            <div key={n.id} className="flex items-center gap-3 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-2xl shadow-sm animate-pulse-once">
+              <CheckCircle size={18} className="shrink-0 text-green-500" />
+              <p className="text-sm font-medium flex-1">{n.mensaje}</p>
+              <button onClick={() => setNotificaciones((prev) => prev.filter((x) => x.id !== n.id))}>
+                <X size={15} className="text-green-400 hover:text-green-600" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
 
       {turnos.length === 0 ? (
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 flex flex-col items-center justify-center text-center">
