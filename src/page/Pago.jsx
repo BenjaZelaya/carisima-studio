@@ -163,20 +163,11 @@ const Pago = () => {
 
       console.log("📤 Subiendo comprobante para turno:", turno._id);
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000);
-
-      let res;
-      try {
-        res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${turno._id}/subir-comprobante`, {
-          method: "POST",
-          headers: { "x-token": token },
-          body: formData,
-          signal: controller.signal,
-        });
-      } finally {
-        clearTimeout(timeoutId);
-      }
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${turno._id}/subir-comprobante`, {
+        method: "POST",
+        headers: { "x-token": token },
+        body: formData,
+      });
 
       console.log("📨 Response status:", res.status);
 
@@ -201,11 +192,7 @@ const Pago = () => {
       setExito(true);
     } catch (err) {
       console.error("❌ Error al subir comprobante:", err);
-      if (err.name === "AbortError") {
-        setError("La subida tardó demasiado. Verificá tu conexión e intentá de nuevo.");
-      } else {
-        setError("Error al subir el comprobante. Intentá de nuevo.");
-      }
+      setError("Error al subir el comprobante. Verificá tu conexión e intentá de nuevo.");
     } finally {
       setSubiendoComprobante(false);
     }
