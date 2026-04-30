@@ -120,9 +120,14 @@ const GestionPacks = () => {
       if (imagenFile) {
         const formData = new FormData();
         formData.append("img", imagenFile);
-        // Usamos el endpoint de productos como proxy de imagen reutilizable
-        // o podemos subir directamente al endpoint de packs si se implementa
-        // Por ahora enviamos el archivo en el body de la petición
+        const uploadRes = await fetch(`${import.meta.env.VITE_API_URL}/productos/upload`, {
+          method: "POST",
+          headers: { "x-token": token },
+          body: formData,
+        });
+        if (!uploadRes.ok) throw new Error("Error al subir la imagen");
+        const uploadData = await uploadRes.json();
+        imagenUrl = uploadData.url;
       }
 
       const payload = {

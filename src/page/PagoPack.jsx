@@ -182,12 +182,37 @@ const PagoPack = () => {
           {/* Pago */}
           <div className="lg:col-span-3 space-y-4">
             <MetodoPago
-              metodoPago={metodoPago}
-              onMetodoPago={setMetodoPago}
-              onPagarConMP={handlePagarConMP}
-              cargandoMP={cargandoMP || cargando}
-              disabled={cargando || cargandoMP || subiendoComprobante}
+              seleccionado={metodoPago}
+              onChange={setMetodoPago}
             />
+
+            {metodoPago === "mercadopago" && (
+              <div className="bg-[#111111] border border-white/10 p-6">
+                <h2 className="font-serif text-xl font-light text-white mb-2">Mercado Pago</h2>
+                <p className="text-white/40 text-sm mb-5">
+                  Pagá la seña de forma segura con tarjeta, efectivo o transferencia.
+                </p>
+                <div className="border border-white/10 p-4 mb-5">
+                  <div className="flex justify-between items-center">
+                    <span className="text-white/40 text-sm">Monto a pagar (seña)</span>
+                    <span className="font-serif text-xl text-white">
+                      AR${seña.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={handlePagarConMP}
+                  disabled={cargandoMP || cargando}
+                  className="w-full flex items-center justify-center gap-3 py-4 border border-white/30 text-white text-sm tracking-widest uppercase hover:bg-white hover:text-black transition-all disabled:opacity-40"
+                >
+                  {cargandoMP || cargando ? (
+                    <div className="w-4 h-4 border border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    "Pagar con Mercado Pago"
+                  )}
+                </button>
+              </div>
+            )}
 
             {metodoPago === "transferencia" && (
               <InstruccionesTransferencia
