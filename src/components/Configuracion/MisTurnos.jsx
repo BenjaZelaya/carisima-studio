@@ -257,16 +257,7 @@ const MisTurnos = () => {
                     Cambiar horario
                   </button>
                 )}
-                {["borrador", "señado", "confirmado"].includes(turno.estado) && (
-                  <button
-                    onClick={() => handleCancelar(turno._id)}
-                    disabled={cancelando === turno._id}
-                    className="flex-1 flex items-center justify-center gap-2 border border-red-200 text-red-500 hover:bg-red-50 font-medium py-2.5 rounded-xl transition text-sm disabled:opacity-60"
-                  >
-                    <X size={15} />
-                    {cancelando === turno._id ? "Cancelando..." : "Cancelar turno"}
-                  </button>
-                )}
+
               </div>
 
             </div>
