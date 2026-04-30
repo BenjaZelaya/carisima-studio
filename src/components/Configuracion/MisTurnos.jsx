@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Calendar, Clock, X, Edit2, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import CambiarHorarioModal from './CambiarHorarioModal';
+import useConfirm from '../hooks/useConfirm.jsx';
 
 const ESTADOS_COLOR = {
   borrador: 'bg-gray-100 text-gray-600 border-gray-200',
@@ -24,6 +25,7 @@ const formatearFecha = (fecha) => {
 
 const MisTurnos = () => {
   const { token } = useAuth();
+  const { confirm: askConfirm, ConfirmDialog } = useConfirm();
   const [turnos, setTurnos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -110,7 +112,7 @@ const MisTurnos = () => {
   }, [token]);
 
   const handleCancelar = async (id) => {
-    if (!confirm("¿Cancelar este turno?")) return;
+    if (!await askConfirm("¿Cancelar este turno?", { danger: true, confirmText: "Sí, cancelar" })) return;
     setCancelando(id);
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${id}/cancelar`, {
@@ -147,6 +149,7 @@ const MisTurnos = () => {
 
   return (
     <div className="max-w-2xl">
+      {ConfirmDialog}
       <h1 className="text-2xl font-bold text-gray-800 mb-1">Mis Turnos</h1>
       <p className="text-gray-400 text-sm mb-8">Historial y próximas reservas</p>
 

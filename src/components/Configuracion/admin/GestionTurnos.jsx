@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import { Check, X, Clock, Calendar, Trash2, Search } from "lucide-react";
+import useConfirm from "../../hooks/useConfirm.jsx";
 
 const ESTADOS_COLOR = {
   borrador: "bg-gray-100 text-gray-600",
@@ -16,6 +17,7 @@ const MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "O
 
 const GestionTurnos = () => {
   const { token } = useAuth();
+  const { confirm: askConfirm, ConfirmDialog } = useConfirm();
 
   const [turnos, setTurnos] = useState([]);
   const [filtro, setFiltro] = useState("todos");
@@ -68,7 +70,7 @@ const GestionTurnos = () => {
   };
 
   const handleCancelar = async (id) => {
-    if (!confirm("¿Cancelar este turno?")) return;
+    if (!await askConfirm("¿Cancelar este turno?", { danger: true, confirmText: "Sí, cancelar" })) return;
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${id}/cancelar`, {
         method: "PATCH",
@@ -81,7 +83,7 @@ const GestionTurnos = () => {
   };
 
   const handleEliminarDefinitivo = async (id) => {
-    if (!confirm("¿Eliminar definitivamente este turno? Esta acción no se puede deshacer.")) return;
+    if (!await askConfirm("¿Eliminar definitivamente este turno? Esta acción no se puede deshacer.", { danger: true, confirmText: "Sí, eliminar" })) return;
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/turnos/${id}`, {
         method: "DELETE",
@@ -140,6 +142,7 @@ const GestionTurnos = () => {
 
   return (
     <div>
+      {ConfirmDialog}
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm">
           {error}

@@ -1,6 +1,7 @@
 // src/components/Configuracion/admin/GestionProductos.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext.jsx";
+import useConfirm from "../../hooks/useConfirm.jsx";
 import { Pencil, Trash2, RotateCcw, GripVertical, X } from "lucide-react";
 import {
   DndContext,
@@ -96,6 +97,7 @@ const ProductoSortable = ({ producto, onEditar, onEliminar, onRestaurar, onElimi
 
 const GestionProductos = () => {
   const { token } = useAuth();
+  const { confirm: askConfirm, ConfirmDialog } = useConfirm();
 
   const [productos, setProductos] = useState([]);
   const [form, setForm] = useState(FORM_INICIAL);
@@ -234,7 +236,7 @@ const GestionProductos = () => {
   };
 
   const handleEliminar = async (id) => {
-    if (!confirm("¿Desactivar este producto?")) return;
+    if (!await askConfirm("¿Desactivar este producto?", { confirmText: "Sí, desactivar" })) return;
     await fetch(`${import.meta.env.VITE_API_URL}/productos/${id}`, {
       method: "DELETE",
       headers: { "x-token": token },
@@ -251,7 +253,7 @@ const GestionProductos = () => {
   };
 
   const handleEliminarDefinitivo = async (id) => {
-    if (!confirm("¿Eliminar definitivamente? Esta acción no se puede deshacer.")) return;
+    if (!await askConfirm("¿Eliminar definitivamente? Esta acción no se puede deshacer.", { danger: true, confirmText: "Sí, eliminar" })) return;
     await fetch(`${import.meta.env.VITE_API_URL}/productos/${id}/definitivo`, {
       method: "DELETE",
       headers: { "x-token": token },
@@ -263,6 +265,7 @@ const GestionProductos = () => {
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      {ConfirmDialog}
 
       {/* Formulario */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">

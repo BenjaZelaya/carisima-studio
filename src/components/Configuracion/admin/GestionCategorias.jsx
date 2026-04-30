@@ -1,6 +1,7 @@
 // src/components/Configuracion/admin/GestionCategorias.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext.jsx";
+import useConfirm from "../../hooks/useConfirm.jsx";
 import { Pencil, Trash2, RotateCcw, ChevronDown, ChevronUp, X, GripVertical } from "lucide-react";
 import {
   DndContext,
@@ -130,6 +131,7 @@ const CategoriaSortable = ({
 
 const GestionCategorias = () => {
   const { token } = useAuth();
+  const { confirm: askConfirm, ConfirmDialog } = useConfirm();
 
   const [categorias, setCategorias] = useState([]);
   const [productos, setProductos] = useState([]);
@@ -250,7 +252,7 @@ const GestionCategorias = () => {
   };
 
   const handleEliminar = async (id) => {
-    if (!confirm("¿Desactivar esta categoría?")) return;
+    if (!await askConfirm("¿Desactivar esta categoría?", { confirmText: "Sí, desactivar" })) return;
     await fetch(`${import.meta.env.VITE_API_URL}/categorias/${id}`, {
       method: "DELETE",
       headers: { "x-token": token },
@@ -267,7 +269,7 @@ const GestionCategorias = () => {
   };
 
   const handleEliminarDefinitivo = async (id) => {
-    if (!confirm("¿Eliminar definitivamente? Esta acción no se puede deshacer.")) return;
+    if (!await askConfirm("¿Eliminar definitivamente? Esta acción no se puede deshacer.", { danger: true, confirmText: "Sí, eliminar" })) return;
     await fetch(`${import.meta.env.VITE_API_URL}/categorias/${id}/definitivo`, {
       method: "DELETE",
       headers: { "x-token": token },
@@ -317,6 +319,7 @@ const GestionCategorias = () => {
 
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      {ConfirmDialog}
 
       {/* Formulario */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">

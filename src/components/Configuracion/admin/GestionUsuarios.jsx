@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import { Trash2, UserCircle2, Search } from "lucide-react";
+import useConfirm from "../../hooks/useConfirm.jsx";
 
 const MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
@@ -19,6 +20,7 @@ const GestionUsuarios = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
   const [eliminando, setEliminando] = useState(null);
+  const { confirm: askConfirm, ConfirmDialog } = useConfirm();
 
   const cargarUsuarios = async () => {
     setCargando(true);
@@ -42,7 +44,7 @@ const GestionUsuarios = () => {
   useEffect(() => { cargarUsuarios(); }, []);
 
   const handleEliminar = async (id, nombre) => {
-    if (!confirm(`¿Eliminar al usuario ${nombre}? Esta acción desactivará su cuenta.`)) return;
+    if (!await askConfirm(`¿Eliminar al usuario ${nombre}? Esta acción desactivará su cuenta.`, { danger: true, confirmText: "Sí, eliminar" })) return;
     setEliminando(id);
     try {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/usuarios/${id}`, {
@@ -51,12 +53,12 @@ const GestionUsuarios = () => {
       });
       if (!res.ok) {
         const data = await res.json();
-        alert(data.msg || "Error al eliminar usuario");
+        setError(data.msg || "Error al eliminar usuario");
         return;
       }
       setUsuarios((prev) => prev.filter((u) => u._id !== id));
     } catch {
-      alert("Error al eliminar usuario");
+      setError("Error al eliminar usuario");
     } finally {
       setEliminando(null);
     }
@@ -75,6 +77,7 @@ const GestionUsuarios = () => {
 
   return (
     <div>
+      {ConfirmDialog}
       {/* Buscador */}
       <div className="relative mb-5">
         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
