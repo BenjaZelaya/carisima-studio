@@ -54,7 +54,7 @@ const Pago = () => {
         const data = await res.json();
 
         if (res.ok && data.data && Array.isArray(data.data)) {
-          const pendiente = data.data.find((t) => ["borrador", "pago_rechazado"].includes(t.estado));
+          const pendiente = data.data.find((t) => ["borrador", "pendiente", "pago_rechazado"].includes(t.estado));
           if (pendiente) {
             setTurnoPendiente(pendiente);
           }
