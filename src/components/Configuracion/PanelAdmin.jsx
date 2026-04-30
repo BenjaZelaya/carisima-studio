@@ -1,16 +1,18 @@
 // src/components/Configuracion/PanelAdmin.jsx
 import { useState } from "react";
-import { Package, Tag, Calendar, CalendarDays } from "lucide-react";
+import { Package, Tag, Calendar, CalendarDays, Users } from "lucide-react";
 import GestionProductos from "./admin/GestionProductos.jsx";
 import GestionCategorias from "./admin/GestionCategorias.jsx";
 import GestionTurnos from "./admin/GestionTurnos.jsx";
 import AgendaAdmin from "./admin/AgendaAdmin.jsx";
+import GestionUsuarios from "./admin/GestionUsuarios.jsx";
 
 const TABS = [
   { id: "turnos", label: "Turnos", icon: Calendar },
   { id: "agenda", label: "Agenda", icon: CalendarDays },
   { id: "productos", label: "Productos", icon: Package },
   { id: "categorias", label: "Categorías", icon: Tag },
+  { id: "usuarios", label: "Usuarios", icon: Users },
 ];
 
 const PanelAdmin = () => {
@@ -43,6 +45,7 @@ const PanelAdmin = () => {
       {seccion === "agenda" && <AgendaAdmin />}
       {seccion === "productos" && <GestionProductos />}
       {seccion === "categorias" && <GestionCategorias />}
+      {seccion === "usuarios" && <GestionUsuarios />}
     </div>
   );
 };
