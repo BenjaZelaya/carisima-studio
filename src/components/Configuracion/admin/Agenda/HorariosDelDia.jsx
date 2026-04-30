@@ -93,43 +93,43 @@ const todosLosHorarios = disponibilidad
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md">
-        <div className="flex items-center justify-between p-5 border-b border-gray-100">
+    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4">
+      <div className="bg-[#111111] border border-white/15 w-full max-w-md">
+        <div className="flex items-center justify-between p-5 border-b border-white/10">
           <div>
-            <h3 className="font-bold text-gray-800">{titulo}</h3>
-            <p className="text-xs text-gray-400 mt-0.5">Administrá los horarios de este día</p>
+            <h3 className="text-sm font-medium text-white">{titulo}</h3>
+            <p className="text-[10px] tracking-widest uppercase text-white/30 mt-0.5">Administrá los horarios de este día</p>
           </div>
-          <button onClick={onCerrar} className="p-2 rounded-xl hover:bg-gray-100 transition text-gray-400">
-            <X size={18} />
+          <button onClick={onCerrar} className="p-2 hover:bg-white/8 transition text-white/40">
+            <X size={16} />
           </button>
         </div>
 
         <div className="p-5 max-h-[400px] overflow-y-auto">
           {cargando ? (
             <div className="flex justify-center py-8">
-              <div className="w-6 h-6 border-4 border-pink-400 border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-white/20 border-t-white/80 rounded-full animate-spin" />
             </div>
           ) : !disponibilidad?.disponible && bloqueos.filter(b => b.tipo === "dia").length > 0 ? (
-            <p className="text-center text-gray-400 text-sm py-8">Este día está bloqueado completamente</p>
+            <p className="text-center text-white/30 text-xs py-8">Este día está bloqueado completamente</p>
           ) : todosLosHorarios.length === 0 ? (
-            <p className="text-center text-gray-400 text-sm py-8">No hay horarios para este día</p>
+            <p className="text-center text-white/30 text-xs py-8">No hay horarios para este día</p>
           ) : (
             <div className="flex flex-col gap-2">
               {todosLosHorarios.map((hora) => {
                 const bloqueo = esBloqueado(hora);
                 return (
                   <div key={hora}
-                    className={`flex items-center justify-between px-4 py-3 rounded-xl ${
-                      bloqueo ? "bg-red-50 border border-red-100" : "bg-gray-50 border border-gray-100"
+                    className={`flex items-center justify-between px-4 py-3 ${
+                      bloqueo ? "bg-red-500/8 border border-red-500/20" : "bg-white/4 border border-white/10"
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <span className={`text-sm font-semibold ${bloqueo ? "text-red-400" : "text-gray-700"}`}>
+                      <span className={`text-sm font-medium ${bloqueo ? "text-red-400" : "text-white/70"}`}>
                         {hora}
                       </span>
                       {bloqueo && (
-                        <span className="text-xs bg-red-100 text-red-500 px-2 py-0.5 rounded-full">Bloqueado</span>
+                        <span className="text-[10px] bg-red-500/10 text-red-400 px-2 py-0.5 tracking-widest uppercase">Bloqueado</span>
                       )}
                     </div>
                     <button
@@ -137,13 +137,13 @@ const todosLosHorarios = disponibilidad
                         ? desbloquearHorario(bloqueo._id)
                         : bloquearHorario(hora, calcularHoraFin(hora))
                       }
-                      className={`flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-lg transition ${
+                      className={`flex items-center gap-1.5 text-[10px] tracking-widest uppercase px-3 py-1.5 transition ${
                         bloqueo
-                          ? "bg-green-100 text-green-600 hover:bg-green-200"
-                          : "bg-red-100 text-red-500 hover:bg-red-200"
+                          ? "border border-white/15 text-white/50 hover:bg-white/5"
+                          : "border border-red-500/20 text-red-400 hover:bg-red-500/10"
                       }`}
                     >
-                      {bloqueo ? <><Unlock size={12} /> Habilitar</> : <><Lock size={12} /> Bloquear</>}
+                      {bloqueo ? <><Unlock size={11} /> Habilitar</> : <><Lock size={11} /> Bloquear</>}
                     </button>
                   </div>
                 );

@@ -10,24 +10,24 @@ const ConfirmModal = ({ isOpen, message, onConfirm, onCancel, confirmText, dange
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onCancel}
       />
-      <div className="relative bg-white rounded-2xl shadow-2xl p-7 max-w-sm w-full animate-fade-in">
+      <div className="relative bg-[#111111] border border-white/15 p-8 max-w-sm w-full">
         {/* Icono */}
         <div
-          className={`w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-5 ${
-            danger ? "bg-red-100" : "bg-amber-100"
+          className={`w-10 h-10 border flex items-center justify-center mx-auto mb-6 ${
+            danger ? "border-red-500/30 bg-red-500/8" : "border-white/15 bg-white/5"
           }`}
         >
           <AlertTriangle
-            size={26}
-            className={danger ? "text-red-500" : "text-amber-500"}
+            size={18}
+            className={danger ? "text-red-400" : "text-white/50"}
           />
         </div>
 
         {/* Mensaje */}
-        <p className="text-gray-800 font-semibold text-center text-base mb-7 leading-snug">
+        <p className="text-white/80 text-center text-sm leading-relaxed mb-8 tracking-wide">
           {message}
         </p>
 
@@ -35,16 +35,16 @@ const ConfirmModal = ({ isOpen, message, onConfirm, onCancel, confirmText, dange
         <div className="flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition"
+            className="flex-1 py-2.5 border border-white/15 text-white/50 text-xs tracking-[0.15em] uppercase hover:bg-white/5 hover:text-white transition"
           >
             No, volver
           </button>
           <button
             onClick={onConfirm}
-            className={`flex-1 py-2.5 rounded-xl text-white text-sm font-semibold transition shadow-sm ${
+            className={`flex-1 py-2.5 text-xs font-semibold tracking-[0.15em] uppercase transition ${
               danger
-                ? "bg-red-500 hover:bg-red-600 shadow-red-200"
-                : "bg-pink-500 hover:bg-pink-600 shadow-pink-200"
+                ? "border border-red-500/40 text-red-400 hover:bg-red-500/15"
+                : "bg-white text-black hover:bg-white/90"
             }`}
           >
             {confirmText}

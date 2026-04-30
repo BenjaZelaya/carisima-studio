@@ -5,12 +5,12 @@ import { Check, X, Clock, Calendar, Trash2, Search } from "lucide-react";
 import useConfirm from "../../hooks/useConfirm.jsx";
 
 const ESTADOS_COLOR = {
-  borrador: "bg-gray-100 text-gray-600",
-  pendiente: "bg-yellow-100 text-yellow-700",
-  señado: "bg-blue-100 text-blue-700",
-  confirmado: "bg-green-100 text-green-700",
-  cancelado: "bg-red-100 text-red-700",
-  completado: "bg-gray-100 text-gray-600",
+  borrador:   'bg-white/5 text-white/40 border border-white/10',
+  pendiente:  'bg-white/5 text-white/50 border border-white/10',
+  señado:     'bg-white/8 text-white/70 border border-white/15',
+  confirmado: 'bg-white/10 text-white border border-white/20',
+  cancelado:  'bg-red-500/10 text-red-400 border border-red-500/20',
+  completado: 'bg-white/5 text-white/30 border border-white/8',
 };
 
 const MESES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
@@ -144,7 +144,7 @@ const GestionTurnos = () => {
     <div>
       {ConfirmDialog}
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm">
+        <div className="border border-red-500/20 bg-red-500/8 text-red-400 px-4 py-3 mb-4 text-xs tracking-wide">
           {error}
         </div>
       )}
@@ -152,32 +152,32 @@ const GestionTurnos = () => {
       {/* Búsqueda y Filtro por fecha */}
       <div className="flex gap-3 mb-6">
         <div className="flex-1 relative">
-          <Search size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
           <input
             type="text"
             placeholder="Buscar por nombre, email, teléfono, servicio o fecha..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100 text-sm"
+            className="w-full pl-9 pr-4 py-2.5 bg-transparent border border-white/15 text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-white/40 transition"
           />
         </div>
 
         <div className="relative">
-          <Calendar size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          <Calendar size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30 pointer-events-none" />
           <input
             type="date"
             value={fechaFiltro}
             onChange={(e) => setFechaFiltro(e.target.value)}
-            className="pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:border-pink-400 focus:ring-2 focus:ring-pink-100 text-sm"
+            className="pl-9 pr-4 py-2.5 bg-transparent border border-white/15 text-white/60 text-sm focus:outline-none focus:border-white/40 transition"
           />
         </div>
 
         {fechaFiltro && (
           <button
             onClick={() => setFechaFiltro("")}
-            className="px-3 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl transition text-sm font-medium"
+            className="px-4 py-2.5 border border-white/15 text-white/50 hover:text-white hover:border-white/30 transition text-xs tracking-widest uppercase"
           >
-            Limpiar fecha
+            Limpiar
           </button>
         )}
       </div>
@@ -186,24 +186,24 @@ const GestionTurnos = () => {
       <div className="flex flex-wrap gap-2 mb-6">
         {[
           { id: "todos", label: "Todos", count: turnos.length },
-          { id: "cambios", label: "Con cambios de horario", count: contarConCambios() },
+          { id: "cambios", label: "Con cambios", count: contarConCambios() },
           { id: "señado", label: "Con comprobante", count: contarPorEstado("señado") },
-          { id: "borrador", label: "Pendientes de pago", count: contarPorEstado("borrador") },
+          { id: "borrador", label: "Pendiente pago", count: contarPorEstado("borrador") },
           { id: "confirmado", label: "Confirmados", count: contarPorEstado("confirmado") },
           { id: "cancelado", label: "Cancelados", count: contarPorEstado("cancelado") },
         ].map(({ id, label, count }) => (
           <button
             key={id}
             onClick={() => setFiltro(id)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+            className={`flex items-center gap-2 px-3 py-1.5 text-xs tracking-widest uppercase transition ${
               filtro === id
-                ? "bg-pink-500 text-white shadow-md shadow-pink-200"
-                : "bg-white border border-gray-200 text-gray-500 hover:bg-gray-50"
+                ? "bg-white text-black"
+                : "border border-white/15 text-white/40 hover:text-white hover:border-white/30"
             }`}
           >
             {label}
-            <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-              filtro === id ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
+            <span className={`text-[10px] px-1.5 py-0.5 ${
+              filtro === id ? "bg-black/10 text-black" : "bg-white/5 text-white/40"
             }`}>
               {count}
             </span>
@@ -213,70 +213,70 @@ const GestionTurnos = () => {
 
       {/* Lista de turnos */}
       {cargando ? (
-        <div className="flex justify-center py-12">
-          <div className="w-8 h-8 border-4 border-pink-400 border-t-transparent rounded-full animate-spin" />
+        <div className="flex justify-center py-16">
+          <div className="w-6 h-6 border-2 border-white/20 border-t-white/80 rounded-full animate-spin" />
         </div>
       ) : turnosFiltrados.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 p-12 text-center">
-          <Calendar size={32} className="text-gray-300 mx-auto mb-3" />
-          <p className="text-gray-400 text-sm">
+        <div className="border border-white/8 p-12 text-center">
+          <Calendar size={28} className="text-white/20 mx-auto mb-3" />
+          <p className="text-white/35 text-sm">
             {busqueda.trim() ? "No se encontraron turnos con esa búsqueda" : "No hay turnos en esta categoría"}
           </p>
         </div>
       ) : (
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
           {turnosFiltrados.map((turno) => (
             <div
               key={turno._id}
-              className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
+              className="border border-white/10 bg-[#111111] overflow-hidden"
             >
               <div
-                className="flex items-center gap-4 p-4 cursor-pointer hover:bg-gray-50 transition"
+                className="flex items-center gap-4 p-4 cursor-pointer hover:bg-white/3 transition"
                 onClick={() => setTurnoExpandido(turnoExpandido === turno._id ? null : turno._id)}
               >
-                <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center flex-shrink-0">
-                  <span className="text-pink-500 font-bold text-sm">
+                <div className="w-8 h-8 border border-white/15 flex items-center justify-center flex-shrink-0">
+                  <span className="text-white/50 text-xs font-semibold">
                     {turno.usuario?.nombre?.charAt(0).toUpperCase()}
                   </span>
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-gray-800">
+                  <p className="text-sm text-white">
                     {turno.usuario?.nombre} {turno.usuario?.apellido}
                   </p>
-                  <div className="flex items-center gap-3 mt-0.5">
-                    <span className="flex items-center gap-1 text-xs text-gray-400">
-                      <Calendar size={11} />
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className="flex items-center gap-1 text-[11px] text-white/35">
+                      <Calendar size={10} />
                       {formatearFecha(turno.fecha, turno.horaInicio)}
                     </span>
                   </div>
                 </div>
 
                 <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                  <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${ESTADOS_COLOR[turno.estado]}`}>
-                    {turno.estado.charAt(0).toUpperCase() + turno.estado.slice(1)}
+                  <span className={`text-[10px] px-2 py-0.5 tracking-widest uppercase ${ESTADOS_COLOR[turno.estado]}`}>
+                    {turno.estado}
                   </span>
-                  <span className="text-xs text-gray-400">
+                  <span className="text-[11px] text-white/30">
                     Seña: AR${turno.seña?.toLocaleString()}
                   </span>
                 </div>
               </div>
 
               {turnoExpandido === turno._id && (
-                <div className="border-t border-gray-100 p-4 bg-gray-50">
+                <div className="border-t border-white/8 p-4 bg-[#0d0d0d]">
 
                   {turno.cambiosRealizados > 0 && (
-                    <div className="mb-4 bg-blue-50 border border-blue-200 rounded-xl p-3">
-                      <p className="text-xs text-blue-600 mb-2 font-semibold uppercase tracking-wide flex items-center gap-2">
-                        <Clock size={14} />
+                    <div className="mb-4 border border-white/10 p-3">
+                      <p className="text-[10px] tracking-[0.15em] uppercase text-white/35 mb-2 flex items-center gap-2">
+                        <Clock size={12} />
                         Historial de cambios ({turno.cambiosRealizados}/{turno.cambiosRestantes || 2})
                       </p>
                       {turno.cambios && turno.cambios.length > 0 && (
                         <div className="mt-2 space-y-1">
                           {turno.cambios.map((cambio, idx) => (
-                            <p key={idx} className="text-xs text-blue-600">
-                              Cambio {idx + 1}: <span className="line-through text-gray-400">{cambio.anterior}</span> → <span className="font-semibold text-green-600">{cambio.nuevo}</span>
-                              <span className="text-gray-400 ml-2">({new Date(cambio.fecha).toLocaleDateString()})</span>
+                            <p key={idx} className="text-xs text-white/45">
+                              Cambio {idx + 1}: <span className="line-through text-white/25">{cambio.anterior}</span> → <span className="text-white/70">{cambio.nuevo}</span>
+                              <span className="text-white/25 ml-2">({new Date(cambio.fecha).toLocaleDateString()})</span>
                             </p>
                           ))}
                         </div>
@@ -286,54 +286,48 @@ const GestionTurnos = () => {
 
                   <div className="flex flex-col gap-2 mb-4">
                     {turno.productos?.map((p) => (
-                      <div key={p._id} className="flex items-center gap-3 bg-white rounded-xl p-3">
-                        <img src={p.img} alt={p.nombreProducto} className="w-10 h-10 rounded-lg object-cover" />
+                      <div key={p._id} className="flex items-center gap-3 border border-white/8 p-3">
+                        <img src={p.img} alt={p.nombreProducto} className="w-9 h-9 object-cover" />
                         <div>
-                          <p className="text-sm font-medium text-gray-800">{p.nombreProducto}</p>
-                          <p className="text-xs text-gray-400">AR${p.precio?.toLocaleString()}</p>
+                          <p className="text-xs text-white/80">{p.nombreProducto}</p>
+                          <p className="text-[11px] text-white/35">AR${p.precio?.toLocaleString()}</p>
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="bg-white rounded-xl p-3 mb-4">
-                    <p className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">Datos del cliente</p>
+                  <div className="border border-white/8 p-3 mb-4">
+                    <p className="text-[10px] tracking-[0.15em] uppercase text-white/30 mb-2">Datos del cliente</p>
                     <div className="flex flex-col gap-1">
-                      <p className="text-sm text-gray-700">
-                        <span className="text-gray-400">Email: </span>{turno.usuario?.email}
-                      </p>
-                      <p className="text-sm text-gray-700">
-                        <span className="text-gray-400">Teléfono: </span>{turno.usuario?.telefono}
-                      </p>
-                      <p className="text-sm text-gray-700">
-                        <span className="text-gray-400">Método de pago: </span>{turno.metodoPago}
-                      </p>
+                      <p className="text-xs text-white/60"><span className="text-white/30">Email: </span>{turno.usuario?.email}</p>
+                      <p className="text-xs text-white/60"><span className="text-white/30">Teléfono: </span>{turno.usuario?.telefono}</p>
+                      <p className="text-xs text-white/60"><span className="text-white/30">Método de pago: </span>{turno.metodoPago}</p>
                     </div>
                   </div>
 
                   {turno.comprobante && (
                     <div className="mb-4">
                       {turno.metodoPago === "mercadopago" ? (
-                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                          <p className="text-xs text-blue-600 font-medium mb-2 uppercase tracking-wide">Comprobante Mercado Pago</p>
-                          <p className="text-sm text-blue-700 font-mono break-all mb-2">{turno.comprobante}</p>
-                          <a 
+                        <div className="border border-white/10 p-3">
+                          <p className="text-[10px] tracking-[0.15em] uppercase text-white/30 mb-2">Comprobante Mercado Pago</p>
+                          <p className="text-xs text-white/60 font-mono break-all mb-2">{turno.comprobante}</p>
+                          <a
                             href={`https://www.mercadopago.com.ar/activities/${turno.comprobante}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-xs text-blue-500 hover:underline inline-block"
+                            className="text-xs text-white/40 hover:text-white transition underline"
                           >
                             Ver en Mercado Pago →
                           </a>
                         </div>
                       ) : (
                         <>
-                          <p className="text-xs text-gray-500 mb-2 font-medium uppercase tracking-wide">Comprobante</p>
+                          <p className="text-[10px] tracking-[0.15em] uppercase text-white/30 mb-2">Comprobante</p>
                           <a href={turno.comprobante} target="_blank" rel="noopener noreferrer">
                             <img
                               src={turno.comprobante}
                               alt="comprobante"
-                              className="w-full max-h-48 object-contain rounded-xl border border-gray-200 hover:opacity-90 transition"
+                              className="w-full max-h-48 object-contain border border-white/10 hover:opacity-80 transition"
                             />
                           </a>
                         </>
@@ -345,27 +339,27 @@ const GestionTurnos = () => {
                     {["señado", "borrador"].includes(turno.estado) && (
                       <button
                         onClick={() => handleConfirmar(turno._id)}
-                        className="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 rounded-xl transition text-sm"
+                        className="flex-1 flex items-center justify-center gap-2 bg-white text-black hover:bg-white/90 py-2 text-[11px] font-semibold tracking-widest uppercase transition"
                       >
-                        <Check size={16} />
-                        Confirmar turno
+                        <Check size={13} />
+                        Confirmar
                       </button>
                     )}
                     {["borrador", "señado", "confirmado"].includes(turno.estado) && (
                       <button
                         onClick={() => handleCancelar(turno._id)}
-                        className="flex-1 flex items-center justify-center gap-2 border border-red-200 text-red-500 hover:bg-red-50 font-semibold py-2.5 rounded-xl transition text-sm"
+                        className="flex-1 flex items-center justify-center gap-2 border border-red-500/30 text-red-400 hover:bg-red-500/10 py-2 text-[11px] tracking-widest uppercase transition"
                       >
-                        <X size={16} />
+                        <X size={13} />
                         Cancelar
                       </button>
                     )}
                     {turno.estado === "cancelado" && (
                       <button
                         onClick={() => handleEliminarDefinitivo(turno._id)}
-                        className="flex-1 flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-2.5 rounded-xl transition text-sm"
+                        className="flex-1 flex items-center justify-center gap-2 border border-red-500/30 text-red-400 hover:bg-red-500/10 py-2 text-[11px] tracking-widest uppercase transition"
                       >
-                        <Trash2 size={16} />
+                        <Trash2 size={13} />
                         Eliminar definitivamente
                       </button>
                     )}

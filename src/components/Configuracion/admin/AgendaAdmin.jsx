@@ -36,8 +36,8 @@ const AgendaAdmin = () => {
 
   if (cargando) {
     return (
-      <div className="flex justify-center py-12">
-        <div className="w-8 h-8 border-4 border-pink-400 border-t-transparent rounded-full animate-spin" />
+      <div className="flex justify-center py-16">
+        <div className="w-6 h-6 border-2 border-white/20 border-t-white/80 rounded-full animate-spin" />
       </div>
     );
   }

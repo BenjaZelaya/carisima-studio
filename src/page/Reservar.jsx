@@ -59,30 +59,31 @@ const Reservar = () => {
 
   if (cargando) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
-        <div className="w-10 h-10 border-4 border-pink-400 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
+        <div className="w-8 h-8 border border-white/20 border-t-white rounded-full animate-spin" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC]">
-        <p className="text-xl text-red-600 text-center px-4">{error}</p>
+      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
+        <p className="text-white/50 text-center px-4">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
+    <div className="min-h-screen bg-[#0a0a0a] relative overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 lg:py-14">
         
         {/* TÍTULO */}
-        <div className="text-center mb-10">
-          <h1 className="text-3xl sm:text-4xl font-semibold text-gray-900">
+        <div className="mb-10">
+          <p className="text-xs tracking-widest uppercase text-white/30 mb-3 font-sans">Booking</p>
+          <h1 className="font-serif text-4xl sm:text-5xl font-light text-white">
             Elegí tus servicios
           </h1>
-          <p className="text-gray-500 mt-2">
+          <p className="text-white/40 text-sm mt-3">
             Seleccioná los tratamientos que deseas reservar
           </p>
         </div>
@@ -132,7 +133,7 @@ const Reservar = () => {
       {/* Overlay */}
       {mostrarResumen && (
         <div
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
           onClick={cerrarResumen}
         />
       )}
@@ -153,10 +154,10 @@ const Reservar = () => {
       {seleccionados.length > 0 && !mostrarResumen && (
         <button
           onClick={abrirResumen}
-          className="fixed bottom-6 right-6 lg:hidden z-50 bg-[#ff7bed] text-white px-6 py-3.5 rounded-2xl shadow-2xl flex items-center gap-2 font-medium active:scale-95 transition-all"
+          className="fixed bottom-6 right-6 lg:hidden z-50 border border-white/30 bg-[#0a0a0a] text-white px-6 py-3.5 flex items-center gap-2 font-medium active:scale-95 transition-all text-sm tracking-wide"
         >
           Ver resumen
-          <span className="bg-white/30 px-2.5 py-0.5 rounded-full text-xs font-bold">
+          <span className="border border-white/20 px-2.5 py-0.5 text-xs font-bold">
             {seleccionados.length}
           </span>
         </button>

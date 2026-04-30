@@ -40,69 +40,65 @@ const Servicios = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 sm:py-16 px-4 sm:px-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-[#0a0a0a] py-16 px-6">
+      <div className="max-w-6xl mx-auto">
+
         {/* Header */}
-        <div className="text-center mb-12 sm:mb-16">
-          <h1 className="text-4xl sm:text-5xl font-light tracking-tight text-gray-900 mb-4">
+        <div className="mb-16">
+          <p className="text-xs tracking-widest2 uppercase text-white/30 mb-4 font-sans">Specialized</p>
+          <h1 className="font-serif text-5xl sm:text-6xl font-light text-white">
             Nuestros Servicios
           </h1>
-          <p className="text-lg sm:text-xl text-gray-500 max-w-md mx-auto">
-            Tratamientos faciales y corporales diseñados para realzar tu belleza natural
+          <p className="text-white/40 text-sm mt-4 max-w-md leading-relaxed">
+            Clinical precision meets exclusive care. Experience our curated selection of
+            high-end beauty treatments designed for the modern aesthetic.
           </p>
         </div>
 
-        {/* Grid con efecto cascada */}
+        {/* Grid */}
         {cargando ? (
           <div className="flex justify-center py-32">
-            <div className="w-10 h-10 border-4 border-pink-300 border-t-pink-600 rounded-full animate-spin" />
+            <div className="w-8 h-8 border border-white/20 border-t-white rounded-full animate-spin" />
           </div>
         ) : productos.length === 0 ? (
-          <p className="text-center text-gray-400 py-24 text-lg">No hay servicios disponibles por el momento</p>
+          <p className="text-center text-white/30 py-24">No hay servicios disponibles por el momento</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/10">
             {productos.map((p, index) => (
               <div
                 key={p._id}
                 onClick={() => setSeleccionado(p)}
-                className="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col h-full opacity-0 translate-y-10"
+                className="group bg-[#0a0a0a] overflow-hidden cursor-pointer opacity-0"
                 style={{
                   animation: `fadeUp 0.6s ease-out forwards`,
-                  animationDelay: `${index * 100}ms`
+                  animationDelay: `${index * 80}ms`
                 }}
               >
                 {/* Imagen */}
-                <div className="relative h-64 sm:h-72 overflow-hidden">
+                <div className="relative overflow-hidden" style={{ aspectRatio: "4/3" }}>
                   <img
                     src={p.img}
                     alt={p.nombreProducto}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover contrast-110 group-hover:scale-105 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
                 </div>
 
                 {/* Info */}
-                <div className="flex-1 p-6 sm:p-8 flex flex-col">
-                  <h3 className="text-xl sm:text-2xl font-medium text-gray-900 mb-3 group-hover:text-pink-600 transition-colors">
+                <div className="p-6">
+                  <h3 className="font-serif text-xl font-light text-white mb-2 group-hover:text-white/70 transition-colors">
                     {p.nombreProducto}
                   </h3>
-
                   {p.descripcion && (
-                    <p className="text-gray-600 text-sm leading-relaxed mb-6 line-clamp-3 flex-1">
+                    <p className="text-white/30 text-xs leading-relaxed mb-4 line-clamp-2">
                       {p.descripcion}
                     </p>
                   )}
-
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div>
-                      <span className="text-xs text-gray-500">DESDE</span>
-                      <p className="text-2xl font-semibold text-gray-900">
-                        ${p.precio.toLocaleString()}
-                      </p>
-                    </div>
-                    <span className="text-pink-500 font-medium flex items-center gap-1 group-hover:gap-2 transition-all">
-                      Ver más <span className="text-lg">→</span>
-                    </span>
+                  <div className="flex items-center justify-between">
+                    <p className="text-white/60 text-sm">
+                      AR${p.precio.toLocaleString()}
+                    </p>
+                    <span className="text-white/30 group-hover:text-white/70 transition-colors text-sm">→</span>
                   </div>
                 </div>
               </div>
@@ -111,49 +107,49 @@ const Servicios = () => {
         )}
       </div>
 
-      {/* MODAL CON EFECTO SUAVE */}
+      {/* MODAL */}
       {seleccionado && (
         <div
           onClick={cerrarModal}
-          className="fixed inset-0 bg-black/70 z-[100] flex items-center justify-center p-4 backdrop-blur-sm"
+          className="fixed inset-0 bg-black/80 z-[100] flex items-center justify-center p-6 backdrop-blur-sm"
         >
-          <div 
-            className="bg-white rounded-3xl w-full max-w-lg sm:max-w-xl overflow-hidden shadow-2xl 
-                       scale-95 opacity-0 animate-[modalEnter_0.4s_cubic-bezier(0.34,1.56,0.64,1)_forwards]"
+          <div
+            className="bg-[#111111] border border-white/10 w-full max-w-lg overflow-hidden"
+            style={{ animation: "modalEnter 0.3s ease forwards" }}
           >
             {/* Imagen */}
-            <div className="relative h-72 sm:h-96">
+            <div className="relative" style={{ aspectRatio: "16/9" }}>
               <img
                 src={seleccionado.img}
                 alt={seleccionado.nombreProducto}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover contrast-110"
               />
               <button
                 onClick={() => setSeleccionado(null)}
-                className="absolute top-4 right-4 bg-white rounded-2xl w-10 h-10 flex items-center justify-center shadow text-gray-600 hover:text-black transition"
+                className="absolute top-4 right-4 w-9 h-9 border border-white/20 text-white/60 hover:text-white flex items-center justify-center transition bg-black/40"
               >
                 ✕
               </button>
             </div>
 
             {/* Contenido */}
-            <div className="p-8 sm:p-10">
-              <h2 className="text-2xl sm:text-3xl font-medium text-gray-900 mb-3">
+            <div className="p-8">
+              <h2 className="font-serif text-3xl font-light text-white mb-2">
                 {seleccionado.nombreProducto}
               </h2>
-              <p className="text-3xl font-semibold text-pink-600 mb-8">
-                ${seleccionado.precio.toLocaleString()}
+              <p className="text-white/40 text-sm mb-6">
+                AR${seleccionado.precio.toLocaleString()}
               </p>
 
               {seleccionado.descripcion && (
-                <p className="text-gray-600 leading-relaxed mb-10 text-[15.2px]">
+                <p className="text-white/40 text-sm leading-relaxed mb-8">
                   {seleccionado.descripcion}
                 </p>
               )}
 
               <button
                 onClick={handleReservar}
-                className="w-full bg-pink-600 hover:bg-pink-700 active:bg-pink-800 text-white font-semibold py-4 rounded-2xl text-lg transition-all"
+                className="w-full border border-white/30 text-white hover:bg-white hover:text-black font-medium py-3.5 text-sm tracking-widest uppercase transition-all duration-300"
               >
                 Reservar turno
               </button>
@@ -161,31 +157,6 @@ const Servicios = () => {
           </div>
         </div>
       )}
-
-      {/* CSS Animaciones */}
-      <style jsx>{`
-        @keyframes fadeUp {
-          from {
-            opacity: 0;
-            transform: translateY(40px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes modalEnter {
-          from {
-            opacity: 0;
-            transform: scale(0.95) translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-      `}</style>
     </div>
   );
 };

@@ -95,22 +95,22 @@ const CalendarioAdmin = ({ disponibilidad, bloqueos, token, onActualizar }) => {
   for (let i = 1; i <= diasEnMes; i++) celdas.push(i);
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+    <div className="bg-[#111111] border border-white/10 p-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <button onClick={anteriorMes} className="p-2 rounded-xl hover:bg-gray-100 transition text-gray-500">
-          <ChevronLeft size={18} />
+        <button onClick={anteriorMes} className="p-2 hover:bg-white/8 transition text-white/40">
+          <ChevronLeft size={16} />
         </button>
-        <h2 className="text-lg font-bold text-gray-800">{MESES[mes]} {anio}</h2>
-        <button onClick={siguienteMes} className="p-2 rounded-xl hover:bg-gray-100 transition text-gray-500">
-          <ChevronRight size={18} />
+        <h2 className="text-sm font-medium text-white tracking-wide">{MESES[mes]} {anio}</h2>
+        <button onClick={siguienteMes} className="p-2 hover:bg-white/8 transition text-white/40">
+          <ChevronRight size={16} />
         </button>
       </div>
 
       {/* Días de la semana */}
       <div className="grid grid-cols-7 mb-2">
         {DIAS_SEMANA.map((d) => (
-          <div key={d} className="text-center text-xs font-medium text-gray-400 py-1">{d}</div>
+          <div key={d} className="text-center text-[10px] tracking-widest uppercase text-white/25 py-1">{d}</div>
         ))}
       </div>
 
@@ -129,20 +129,20 @@ const CalendarioAdmin = ({ disponibilidad, bloqueos, token, onActualizar }) => {
               <button
                 onClick={() => handleClickDia(dia)}
                 disabled={pasado}
-                className={`w-full aspect-square rounded-xl flex flex-col items-center justify-center text-sm font-medium transition-all ${
+                className={`w-full aspect-square flex flex-col items-center justify-center text-xs font-medium transition-all ${
                   pasado
-                    ? "text-gray-200 cursor-not-allowed"
+                    ? "text-white/10 cursor-not-allowed"
                     : bloqueado
-                    ? "bg-red-50 text-red-400 border border-red-100"
+                    ? "bg-red-500/10 text-red-400 border border-red-500/20"
                     : disponible
-                    ? "bg-pink-50 text-pink-600 border border-pink-100 hover:bg-pink-100"
-                    : "bg-gray-50 text-gray-400 border border-gray-100 hover:bg-gray-100"
-                } ${esHoy && !pasado ? "ring-2 ring-pink-400" : ""}`}
+                    ? "bg-white/8 text-white border border-white/20 hover:bg-white/15"
+                    : "bg-transparent text-white/30 border border-white/8 hover:bg-white/5"
+                } ${esHoy && !pasado ? "ring-1 ring-white/50" : ""}`}
               >
                 <span>{dia}</span>
                 {!pasado && (
-                  <span className={`w-1.5 h-1.5 rounded-full mt-0.5 ${
-                    bloqueado ? "bg-red-300" : disponible ? "bg-pink-400" : "bg-gray-300"
+                  <span className={`w-1 h-1 rounded-full mt-0.5 ${
+                    bloqueado ? "bg-red-400" : disponible ? "bg-white/60" : "bg-white/15"
                   }`} />
                 )}
               </button>
@@ -154,12 +154,12 @@ const CalendarioAdmin = ({ disponibilidad, bloqueos, token, onActualizar }) => {
                     e.stopPropagation();
                     bloqueado ? desbloquearDia(dia) : bloquearDia(dia);
                   }}
-                  className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-white border border-gray-200 shadow-sm items-center justify-center hidden group-hover:flex transition"
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-[#111111] border border-white/20 items-center justify-center hidden group-hover:flex transition"
                   title={bloqueado ? "Habilitar día" : "Bloquear día"}
                 >
                   {bloqueado
-                    ? <Unlock size={10} className="text-green-500" />
-                    : <Lock size={10} className="text-red-400" />
+                    ? <Unlock size={9} className="text-white/60" />
+                    : <Lock size={9} className="text-red-400" />
                   }
                 </button>
               )}
@@ -169,15 +169,15 @@ const CalendarioAdmin = ({ disponibilidad, bloqueos, token, onActualizar }) => {
       </div>
 
       {/* Leyenda */}
-      <div className="flex gap-4 mt-4 pt-4 border-t border-gray-100">
-        <div className="flex items-center gap-1.5 text-xs text-gray-500">
-          <span className="w-3 h-3 rounded-full bg-pink-400" /> Disponible
+      <div className="flex gap-4 mt-4 pt-4 border-t border-white/8">
+        <div className="flex items-center gap-1.5 text-[10px] text-white/30">
+          <span className="w-2.5 h-2.5 rounded-full bg-white/50" /> Disponible
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-gray-500">
-          <span className="w-3 h-3 rounded-full bg-red-300" /> Bloqueado
+        <div className="flex items-center gap-1.5 text-[10px] text-white/30">
+          <span className="w-2.5 h-2.5 rounded-full bg-red-400" /> Bloqueado
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-gray-500">
-          <span className="w-3 h-3 rounded-full bg-gray-300" /> No laboral
+        <div className="flex items-center gap-1.5 text-[10px] text-white/30">
+          <span className="w-2.5 h-2.5 rounded-full bg-white/15" /> No laboral
         </div>
       </div>
 

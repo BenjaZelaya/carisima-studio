@@ -1,12 +1,12 @@
 // src/components/Navbar/Navbar.jsx
 import { Link, useNavigate } from "react-router-dom";
-import { UserCircle, Menu, X } from "lucide-react";
+import { UserCircle, Menu, X, Settings2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useState } from "react";
 import logo from "../../assets/logo-carissima.png";
 
 export default function Navbar() {
-  const { estaLogueado, usuario, logout } = useAuth();
+  const { estaLogueado, usuario, logout, esAdmin } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -17,21 +17,20 @@ export default function Navbar() {
   };
 
   return (
-    <header className="w-full bg-white border-b border-gray-200 shadow-[0_6px_20px_rgba(0,0,0,0.08)] sticky top-0 z-50">
+    <header className="w-full bg-[#0a0a0a] border-b border-white/10 sticky top-0 z-50">
       
-      <nav className="max-w-7xl mx-auto px-6 sm:px-8 py-5 flex items-center justify-between">
+      <nav className="w-full px-8 sm:px-14 py-5 flex items-center justify-between">
         
         {/* LOGO */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Carissima Studio" className="h-11 sm:h-12" />
+          <img src={logo} alt="Carissima Studio" className="h-10 sm:h-11 invert" />
         </Link>
 
         {/* LINKS - Desktop */}
-        <div className="hidden md:flex items-center gap-2">
-          <NavButton to="/">Principal</NavButton>
-          <NavButton to="/reservar">Reservar</NavButton>
-          <NavButton to="/servicios">Servicios</NavButton>
-          <NavButton to="/agenda">Agenda</NavButton>
+        <div className="hidden md:flex items-center gap-1">
+          <NavLink to="/">Principal</NavLink>
+          <NavLink to="/reservar">Reservar</NavLink>
+          <NavLink to="/servicios">Servicios</NavLink>
         </div>
 
         {/* Acciones - Desktop */}
@@ -39,30 +38,33 @@ export default function Navbar() {
           {estaLogueado ? (
             <>
               <Link to="/configuracion">
-                <button className="flex items-center gap-2 px-5 py-3 text-sm font-medium rounded-full border-2 bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200 shadow-[0_6px_15px_rgba(0,0,0,0.12)] transition-all duration-300 hover:shadow-[0_10px_25px_rgba(0,0,0,0.18)] hover:-translate-y-0.5">
-                  <UserCircle size={18} className="text-pink-400" />
-                  <span className="hidden sm:inline">{usuario?.nombre || "Perfil"}</span>
+                <button className="flex items-center gap-2 px-5 py-2.5 text-sm font-medium rounded-full border border-white/20 text-white/70 hover:text-white hover:border-white/40 transition-all duration-200">
+                  <UserCircle size={16} className="text-white/50" />
+                  <span>{usuario?.nombre || "Perfil"}</span>
                 </button>
               </Link>
-
               <button
                 onClick={handleLogout}
-                className="px-5 py-3 text-sm font-medium rounded-full border-2 bg-[#ff7bed] text-white border-[#ff7bed] hover:opacity-90 shadow-[0_6px_15px_rgba(0,0,0,0.12)] transition-all duration-300 hover:shadow-[0_10px_25px_rgba(0,0,0,0.18)] hover:-translate-y-0.5"
+                className="px-5 py-2.5 text-sm font-medium rounded-full border border-white/20 text-white/70 hover:text-white hover:border-white/40 transition-all duration-200"
               >
                 Cerrar sesión
               </button>
             </>
           ) : (
-            <NavButton to="/login" primary>Ingresar</NavButton>
+            <Link to="/login">
+              <button className="px-6 py-2.5 text-sm font-medium rounded-full border border-white text-white hover:bg-white hover:text-black transition-all duration-200 tracking-wide">
+                Ingresar
+              </button>
+            </Link>
           )}
         </div>
 
         {/* BOTÓN MOBILE */}
         <button
           onClick={() => setMenuOpen(true)}
-          className="md:hidden p-3 text-gray-600 hover:text-pink-600 transition-all"
+          className="md:hidden p-2 text-white/70 hover:text-white transition"
         >
-          <Menu size={28} />
+          <Menu size={26} />
         </button>
       </nav>
 
@@ -70,57 +72,73 @@ export default function Navbar() {
       {menuOpen && (
         <div
           onClick={() => setMenuOpen(false)}
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
         />
       )}
 
       {/* DRAWER MOBILE */}
       <div
-        className={`fixed top-0 left-0 h-full w-[85%] max-w-sm bg-white z-50 transform transition-transform duration-300 ease-out flex flex-col ${
+        className={`fixed top-0 left-0 h-full w-[85%] max-w-sm bg-[#0f0f0f] border-r border-white/10 z-50 transform transition-transform duration-300 ease-out flex flex-col ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* HEADER */}
-        <div className="flex items-center justify-between px-6 py-5 border-b">
-          <img src={logo} alt="logo" className="h-10" />
-          <button onClick={() => setMenuOpen(false)}>
-            <X size={26} />
+        <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
+          <img src={logo} alt="logo" className="h-9 invert" />
+          <button onClick={() => setMenuOpen(false)} className="text-white/60 hover:text-white transition">
+            <X size={24} />
           </button>
         </div>
 
         {/* LINKS */}
-        <div className="flex flex-col px-6 py-6 gap-4 text-gray-700">
+        <div className="flex flex-col px-4 py-6 gap-1">
           <MobileNavLink to="/" onClick={() => setMenuOpen(false)}>Principal</MobileNavLink>
           <MobileNavLink to="/reservar" onClick={() => setMenuOpen(false)}>Reservar</MobileNavLink>
           <MobileNavLink to="/servicios" onClick={() => setMenuOpen(false)}>Servicios</MobileNavLink>
-          <MobileNavLink to="/agenda" onClick={() => setMenuOpen(false)}>Agenda</MobileNavLink>
         </div>
 
-        <div className="h-px bg-gray-100 mx-6 my-2" />
+        <div className="h-px bg-white/10 mx-6 my-2" />
 
-        {/* FOOTER (LOGIN / PERFIL) */}
-        <div className="mt-auto px-6 pb-6">
+        {/* FOOTER */}
+        <div className="mt-auto px-6 pb-8">
           {estaLogueado ? (
             <>
               <Link
                 to="/configuracion"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-gray-100 mb-3"
+                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-white/70 hover:text-white transition"
               >
-                <UserCircle size={22} className="text-pink-400" />
+                <UserCircle size={20} className="text-white/40" />
                 {usuario?.nombre || "Mi Perfil"}
               </Link>
-
+              <Link
+                to="/configuracion?tab=turnos"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 text-white/70 hover:text-white transition"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width={20} height={20} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="text-white/40"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                Mis Turnos
+              </Link>
+              {esAdmin && (
+                <Link
+                  to="/configuracion?tab=admin"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 mb-3 text-white/70 hover:text-white transition"
+                >
+                  <Settings2 size={20} className="text-white/40" />
+                  Panel Admin
+                </Link>
+              )}
               <button
                 onClick={handleLogout}
-                className="w-full bg-gray-100 text-gray-700 py-3 rounded-2xl font-medium hover:bg-gray-200 transition"
+                className="w-full border border-white/20 text-white/70 py-3 rounded-xl font-medium hover:bg-white/5 hover:text-white transition"
               >
                 Cerrar sesión
               </button>
             </>
           ) : (
             <Link to="/login" onClick={() => setMenuOpen(false)}>
-              <button className="w-full bg-[#ff7bed] text-white py-3.5 rounded-2xl font-medium shadow-md hover:opacity-90 transition">
+              <button className="w-full border border-white text-white py-3.5 rounded-xl font-medium hover:bg-white hover:text-black transition">
                 Ingresar
               </button>
             </Link>
@@ -131,21 +149,11 @@ export default function Navbar() {
   );
 }
 
-/* BOTÓN DESKTOP */
-function NavButton({ children, primary, to }) {
+/* LINK DESKTOP */
+function NavLink({ children, to }) {
   return (
     <Link to={to}>
-      <button
-        className={`
-          px-8 py-3 text-sm font-medium rounded-full border-2 shadow-[0_6px_15px_rgba(0,0,0,0.12)]
-          transition-all duration-300 hover:shadow-[0_10px_25px_rgba(0,0,0,0.18)] hover:-translate-y-0.5
-          ${
-            primary
-              ? "bg-[#ff7bed] text-white border-[#ff7bed] hover:opacity-90"
-              : "bg-gray-100 text-gray-700 border-gray-200 hover:bg-gray-200"
-          }
-        `}
-      >
+      <button className="px-5 py-2.5 text-sm font-medium text-white/60 hover:text-white tracking-wide transition-colors duration-200 rounded-full hover:bg-white/5">
         {children}
       </button>
     </Link>
@@ -158,7 +166,7 @@ function MobileNavLink({ children, to, onClick }) {
     <Link
       to={to}
       onClick={onClick}
-      className="block px-4 py-3 rounded-2xl hover:bg-gray-100 transition"
+      className="block px-4 py-3 rounded-xl text-white/60 hover:text-white hover:bg-white/5 transition text-sm tracking-wide"
     >
       {children}
     </Link>

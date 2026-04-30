@@ -20,35 +20,35 @@ const MetodoPago = ({ seleccionado, onChange }) => {
   ];
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-      <h2 className="text-lg font-bold text-gray-800 mb-5">Método de pago</h2>
+    <div className="bg-[#111111] border border-white/10 p-6">
+      <h2 className="font-serif text-xl font-light text-white mb-5">Método de pago</h2>
       <div className="flex flex-col gap-3">
         {metodos.map(({ id, label, descripcion, icon: Icon }) => (
           <button
             key={id}
             onClick={() => onChange(id)}
-            className={`flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left ${
+            className={`flex items-center gap-4 p-4 border transition-all text-left ${
               seleccionado === id
-                ? "border-gray-800 bg-gray-800 text-white"
-                : "border-gray-200 hover:border-gray-300 bg-white"
+                ? "border-white/50 bg-white/5"
+                : "border-white/10 hover:border-white/25"
             }`}
           >
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-              seleccionado === id ? "bg-white/20" : "bg-gray-100"
+            <div className={`w-10 h-10 border flex items-center justify-center flex-shrink-0 ${
+              seleccionado === id ? "border-white/30" : "border-white/10"
             }`}>
-              <Icon size={20} className={seleccionado === id ? "text-white" : "text-gray-600"} />
+              <Icon size={18} className={seleccionado === id ? "text-white" : "text-white/30"} />
             </div>
             <div className="flex-1">
-              <p className={`font-semibold text-sm ${seleccionado === id ? "text-white" : "text-gray-800"}`}>
+              <p className={`text-sm font-medium ${seleccionado === id ? "text-white" : "text-white/50"}`}>
                 {label}
               </p>
-              <p className={`text-xs ${seleccionado === id ? "text-white/70" : "text-gray-400"}`}>
+              <p className={`text-xs ${seleccionado === id ? "text-white/40" : "text-white/20"}`}>
                 {descripcion}
               </p>
             </div>
             {seleccionado === id && (
-              <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center flex-shrink-0">
-                <span className="text-gray-800 text-xs font-bold">✓</span>
+              <div className="w-5 h-5 border border-white/30 flex items-center justify-center flex-shrink-0">
+                <span className="text-white text-xs">✓</span>
               </div>
             )}
           </button>

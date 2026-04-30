@@ -5,46 +5,41 @@ const TarjetaServicio = ({ servicio, isSelected, onToggle }) => {
   return (
     <div
       onClick={() => onToggle(servicio)}
-      className={`group flex flex-col sm:flex-row gap-4 sm:gap-5 p-5 rounded-3xl border-2 transition-all duration-300 cursor-pointer active:scale-[0.985] ${
+      className={`group flex gap-4 p-4 border transition-all duration-200 cursor-pointer ${
         isSelected
-          ? "border-[#ff7bed] bg-[#ff7bed]/5"
-          : "border-gray-200 hover:border-gray-300 bg-white hover:shadow-md"
+          ? "border-white/50 bg-white/5"
+          : "border-white/10 hover:border-white/25 bg-transparent"
       }`}
     >
-      <div className={`p-1 rounded-2xl border-2 flex-shrink-0 self-center sm:self-start ${
-        isSelected ? "border-[#ff7bed]/30" : "border-transparent"
-      }`}>
+      <div className="flex-shrink-0">
         <img
           src={servicio.img || "https://via.placeholder.com/80?text=?"}
           alt={servicio.nombreProducto}
-          className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover"
+          className="w-20 h-20 object-cover contrast-110"
           onError={(e) => { e.target.src = "https://via.placeholder.com/80?text=?"; }}
         />
       </div>
 
-      <div className="flex-1 min-w-0 flex flex-col">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
-          <h3 className={`font-bold text-lg sm:text-xl leading-tight ${
-            isSelected ? "text-[#ff7bed]" : "text-gray-800"
-          } group-hover:text-[#ff7bed]`}>
+      <div className="flex-1 min-w-0 flex flex-col justify-between">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className={`font-serif text-lg font-light leading-tight ${
+            isSelected ? "text-white" : "text-white/70 group-hover:text-white"
+          } transition-colors`}>
             {servicio.nombreProducto}
           </h3>
-
-          <p className="font-extrabold text-xl sm:text-2xl text-gray-900 whitespace-nowrap">
+          <p className="text-white/60 text-sm whitespace-nowrap">
             AR${Number(servicio.precio || 0).toLocaleString()}
           </p>
         </div>
-
-        <p className="text-sm text-gray-600 line-clamp-2 mt-2 pr-4">
+        <p className="text-xs text-white/30 line-clamp-2 mt-2">
           {servicio.descripcion || "Sin descripción disponible"}
         </p>
       </div>
 
-      {/* Icono + / ✓ */}
-      <div className={`hidden sm:flex w-12 h-12 rounded-2xl items-center justify-center flex-shrink-0 self-center transition-all ${
-        isSelected ? "bg-[#ff7bed] text-white" : "bg-gray-100 text-gray-400 group-hover:bg-gray-200"
+      <div className={`flex-shrink-0 w-8 h-8 border flex items-center justify-center self-center transition-all ${
+        isSelected ? "border-white bg-white text-black" : "border-white/15 text-white/20 group-hover:border-white/30"
       }`}>
-        {isSelected ? <Check size={24} strokeWidth={3} /> : <Plus size={24} strokeWidth={3} />}
+        {isSelected ? <Check size={14} strokeWidth={2.5} /> : <Plus size={14} strokeWidth={2} />}
       </div>
     </div>
   );

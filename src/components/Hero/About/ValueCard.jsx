@@ -1,14 +1,10 @@
 function ValueCard({ title, text }) {
   return (
-    <div className="
-      bg-white rounded-3xl p-10
-      shadow-[0_10px_30px_rgba(0,0,0,0.1)]
-      text-center
-    ">
-      <h4 className="text-xl font-medium mb-4 text-[#0B0B0B]">
+    <div className="border border-white/10 p-8 hover:border-white/25 transition-colors duration-300">
+      <h4 className="font-serif text-xl font-light text-white mb-4">
         {title}
       </h4>
-      <p className="text-gray-600 leading-relaxed">
+      <p className="text-white/40 text-sm leading-relaxed">
         {text}
       </p>
     </div>

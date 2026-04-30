@@ -6,12 +6,12 @@ import CambiarHorarioModal from './CambiarHorarioModal';
 import useConfirm from '../hooks/useConfirm.jsx';
 
 const ESTADOS_COLOR = {
-  borrador: 'bg-gray-100 text-gray-600 border-gray-200',
-  confirmado: 'bg-green-100 text-green-700 border-green-200',
-  señado: 'bg-blue-100 text-blue-700 border-blue-200',
-  pendiente: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  cancelado: 'bg-red-100 text-red-500 border-red-200',
-  completado: 'bg-gray-100 text-gray-600 border-gray-200',
+  borrador:   'bg-white/5 text-white/40 border-white/10',
+  confirmado: 'bg-white/10 text-white border-white/20',
+  señado:     'bg-white/8 text-white/70 border-white/15',
+  pendiente:  'bg-white/5 text-white/50 border-white/10',
+  cancelado:  'bg-red-500/10 text-red-400 border-red-500/20',
+  completado: 'bg-white/5 text-white/30 border-white/8',
 };
 
 const formatearFecha = (fecha) => {
@@ -129,18 +129,18 @@ const MisTurnos = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center py-12">
-        <div className="w-8 h-8 border-4 border-pink-400 border-t-transparent rounded-full animate-spin" />
+      <div className="flex justify-center py-16">
+        <div className="w-6 h-6 border-2 border-white/20 border-t-white/80 rounded-full animate-spin" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center py-12">
-        <p className="text-red-500">{error}</p>
+      <div className="px-8 py-12 text-center">
+        <p className="text-red-400 text-sm mb-4">{error}</p>
         <button onClick={() => window.location.reload()}
-          className="mt-4 px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition text-sm">
+          className="px-6 py-2 border border-white/20 text-white/60 text-xs tracking-widest uppercase hover:bg-white/5 transition">
           Reintentar
         </button>
       </div>
@@ -148,20 +148,24 @@ const MisTurnos = () => {
   }
 
   return (
-    <div className="max-w-2xl">
+    <div className="px-8 py-8">
       {ConfirmDialog}
-      <h1 className="text-2xl font-bold text-gray-800 mb-1">Mis Turnos</h1>
-      <p className="text-gray-400 text-sm mb-8">Historial y próximas reservas</p>
 
-      {/* Notificaciones de confirmación */}
+      {/* Header */}
+      <div className="border-b border-white/8 pb-6 mb-8">
+        <p className="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-1">Admin / Mis Turnos</p>
+        <h1 className="text-2xl font-bold tracking-tight text-white">Mis Turnos</h1>
+      </div>
+
+      {/* Notificaciones */}
       {notificaciones.length > 0 && (
         <div className="flex flex-col gap-2 mb-6">
           {notificaciones.map((n) => (
-            <div key={n.id} className="flex items-center gap-3 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-2xl shadow-sm animate-pulse-once">
-              <CheckCircle size={18} className="shrink-0 text-green-500" />
-              <p className="text-sm font-medium flex-1">{n.mensaje}</p>
+            <div key={n.id} className="flex items-center gap-3 bg-white/5 border border-white/15 text-white/80 px-4 py-3">
+              <CheckCircle size={15} className="shrink-0 text-white/60" />
+              <p className="text-sm flex-1">{n.mensaje}</p>
               <button onClick={() => setNotificaciones((prev) => prev.filter((x) => x.id !== n.id))}>
-                <X size={15} className="text-green-400 hover:text-green-600" />
+                <X size={14} className="text-white/30 hover:text-white transition" />
               </button>
             </div>
           ))}
@@ -169,99 +173,87 @@ const MisTurnos = () => {
       )}
 
       {turnos.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 flex flex-col items-center justify-center text-center">
-          <div className="w-16 h-16 rounded-full bg-pink-50 flex items-center justify-center mb-4">
-            <Calendar size={28} className="text-pink-400" />
-          </div>
-          <p className="text-gray-500 font-medium">Todavía no tenés turnos reservados</p>
-          <p className="text-gray-400 text-sm mt-1">Cuando reserves un turno aparecerá acá</p>
+        <div className="border border-white/8 p-16 flex flex-col items-center text-center">
+          <Calendar size={28} className="text-white/20 mb-4" />
+          <p className="text-white/40 text-sm">Todavía no tenés turnos reservados</p>
+          <p className="text-white/25 text-xs mt-1">Cuando reserves un turno aparecerá acá</p>
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3 max-w-2xl">
           {turnos.map((turno) => (
-            <div key={turno._id} className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+            <div key={turno._id} className="border border-white/10 bg-[#111111] p-5">
 
               {/* Header */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="bg-pink-50 text-pink-500 rounded-xl p-2.5">
-                    <Calendar size={20} />
+                  <div className="border border-white/10 p-2.5 text-white/40">
+                    <Calendar size={18} />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-800 capitalize">
+                    <p className="text-sm font-medium text-white capitalize">
                       {formatearFecha(turno.fecha)}
                     </p>
-                    <div className="flex items-center gap-1.5 text-gray-400 text-sm mt-0.5">
-                      <Clock size={13} />
+                    <div className="flex items-center gap-1.5 text-white/40 text-xs mt-0.5">
+                      <Clock size={11} />
                       <span>{turno.horaInicio}hs</span>
                     </div>
                   </div>
                 </div>
-                <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${ESTADOS_COLOR[turno.estado] || ESTADOS_COLOR.completado}`}>
-                  {turno.estado.toUpperCase()}
+                <span className={`px-2.5 py-1 text-[10px] tracking-widest uppercase border ${ESTADOS_COLOR[turno.estado] || ESTADOS_COLOR.completado}`}>
+                  {turno.estado}
                 </span>
               </div>
 
               {/* Servicios */}
-              <div className="pt-4 border-t border-gray-100 mb-4">
-                <p className="text-xs text-gray-400 mb-2 uppercase tracking-wide font-medium">Servicios</p>
+              <div className="pt-4 border-t border-white/8 mb-4">
+                <p className="text-[10px] tracking-[0.15em] uppercase text-white/25 mb-2">Servicios</p>
                 <div className="flex flex-wrap gap-2">
                   {turno.productos?.map((p) => (
-                    <div key={p._id} className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-xl">
+                    <div key={p._id} className="flex items-center gap-2 border border-white/10 px-3 py-1.5">
                       {p.img && (
-                        <img src={p.img} alt={p.nombreProducto} className="w-6 h-6 rounded-lg object-cover" />
+                        <img src={p.img} alt={p.nombreProducto} className="w-5 h-5 object-cover" />
                       )}
-                      <span className="text-sm text-gray-700">{p.nombreProducto}</span>
+                      <span className="text-xs text-white/60">{p.nombreProducto}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Totales */}
-              <div className="flex justify-between text-sm pt-3 border-t border-gray-100 mb-4">
-                <div className="text-gray-500">
-                  Total: <span className="font-semibold text-gray-800">AR${turno.total?.toLocaleString()}</span>
+              <div className="flex justify-between text-xs pt-3 border-t border-white/8 mb-4">
+                <div className="text-white/40">
+                  Total: <span className="text-white/80 font-medium">AR${turno.total?.toLocaleString()}</span>
                 </div>
-                <div className="text-[#ff7bed]">
-                  Seña: <span className="font-semibold">AR${turno.seña?.toLocaleString()}</span>
+                <div className="text-white/40">
+                  Seña: <span className="text-white/60">AR${turno.seña?.toLocaleString()}</span>
                 </div>
               </div>
 
-              {/* Info de cambios disponibles */}
+              {/* Info cambios */}
               {turno.estado === 'confirmado' && cambiosDisponibles[turno._id] && (
-                <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 mb-4">
-                  <p className="text-xs text-blue-600 font-medium mb-2">CAMBIOS DE HORARIO</p>
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="text-sm text-blue-700">
-                        Cambios restantes: <span className="font-bold">{cambiosDisponibles[turno._id].cambiosRestantes}/2</span>
-                      </p>
-                      {cambiosDisponibles[turno._id].tiempoRestanteHoras > 0 && (
-                        <p className="text-xs text-blue-600 mt-1">
-                          Disponible por: <span className="font-semibold">{cambiosDisponibles[turno._id].tiempoRestanteHoras}h</span>
-                        </p>
-                      )}
-                    </div>
-                  </div>
+                <div className="border border-white/8 bg-white/3 p-3 mb-4">
+                  <p className="text-[10px] tracking-[0.15em] uppercase text-white/30 mb-2">Cambios de horario</p>
+                  <p className="text-xs text-white/50">
+                    Restantes: <span className="text-white/80 font-medium">{cambiosDisponibles[turno._id].cambiosRestantes}/2</span>
+                  </p>
+                  {cambiosDisponibles[turno._id].tiempoRestanteHoras > 0 && (
+                    <p className="text-xs text-white/40 mt-1">
+                      Disponible por: <span className="text-white/60">{cambiosDisponibles[turno._id].tiempoRestanteHoras}h</span>
+                    </p>
+                  )}
                 </div>
               )}
 
               {/* Botones */}
-              <div className="flex gap-2">
-                {turno.estado === 'confirmado' && cambiosDisponibles[turno._id]?.puedesCambiar && (
-                  <button
-                    onClick={() => {
-                      setTurnoSeleccionado(turno);
-                      setModalAbierto(true);
-                    }}
-                    className="flex-1 flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 text-blue-600 hover:bg-blue-100 font-medium py-2.5 rounded-xl transition text-sm"
-                  >
-                    <Edit2 size={15} />
-                    Cambiar horario
-                  </button>
-                )}
-
-              </div>
+              {turno.estado === 'confirmado' && cambiosDisponibles[turno._id]?.puedesCambiar && (
+                <button
+                  onClick={() => { setTurnoSeleccionado(turno); setModalAbierto(true); }}
+                  className="flex items-center gap-2 border border-white/20 text-white/60 hover:text-white hover:border-white/40 px-4 py-2 text-xs tracking-widest uppercase transition"
+                >
+                  <Edit2 size={13} />
+                  Cambiar horario
+                </button>
+              )}
 
             </div>
           ))}

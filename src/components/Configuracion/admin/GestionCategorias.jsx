@@ -38,24 +38,26 @@ const CategoriaSortable = ({
 
   return (
     <div ref={setNodeRef} style={style}
-      className={`rounded-xl border ${categoria.estado ? "border-gray-100 bg-gray-50" : "border-red-100 bg-red-50"}`}
+      className={`border ${
+        categoria.estado ? "border-white/10 bg-[#111111]" : "border-red-500/20 bg-red-500/5"
+      }`}
     >
       <div className="flex items-center gap-3 p-3">
         {/* Handle drag */}
         <button {...attributes} {...listeners}
-          className="text-gray-300 hover:text-gray-500 cursor-grab active:cursor-grabbing flex-shrink-0">
-          <GripVertical size={16} />
+          className="text-white/20 hover:text-white/50 cursor-grab active:cursor-grabbing flex-shrink-0">
+          <GripVertical size={14} />
         </button>
 
-        <div className="w-10 h-10 rounded-lg bg-pink-100 flex items-center justify-center flex-shrink-0">
-          <span className="text-pink-500 font-bold text-sm">
+        <div className="w-8 h-8 border border-white/15 flex items-center justify-center flex-shrink-0">
+          <span className="text-white/50 text-xs font-semibold">
             {categoria.nombreCategoria.charAt(0).toUpperCase()}
           </span>
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="font-medium text-sm text-gray-800 truncate">{categoria.nombreCategoria}</p>
-          <p className="text-xs text-gray-400">
+          <p className="text-sm text-white/80 truncate">{categoria.nombreCategoria}</p>
+          <p className="text-[11px] text-white/35">
             {categoria.productos?.length || 0} {categoria.productos?.length === 1 ? "servicio" : "servicios"}
           </p>
           {!categoria.estado && <span className="text-xs text-red-400">Inactiva</span>}
@@ -65,28 +67,28 @@ const CategoriaSortable = ({
           {categoria.estado ? (
             <>
               <button onClick={() => onExpandir(expandidaId === categoria._id ? null : categoria._id)}
-                className="p-2 rounded-lg hover:bg-white border border-transparent hover:border-gray-200 text-gray-400 hover:text-gray-700 transition">
-                {expandidaId === categoria._id ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                className="p-2 hover:bg-white/8 border border-white/10 text-white/35 hover:text-white/70 transition">
+                {expandidaId === categoria._id ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
               </button>
               <button onClick={() => onEditar(categoria)}
-                className="p-2 rounded-lg hover:bg-white border border-transparent hover:border-gray-200 text-gray-400 hover:text-gray-700 transition">
-                <Pencil size={15} />
+                className="p-2 hover:bg-white/8 border border-white/10 text-white/35 hover:text-white/70 transition">
+                <Pencil size={13} />
               </button>
               <button onClick={() => onEliminar(categoria._id)}
-                className="p-2 rounded-lg hover:bg-red-50 border border-transparent hover:border-red-100 text-gray-400 hover:text-red-500 transition">
-                <Trash2 size={15} />
+                className="p-2 hover:bg-red-500/10 border border-white/10 text-white/35 hover:text-red-400 transition">
+                <Trash2 size={13} />
               </button>
             </>
           ) : (
             <>
               <button onClick={() => onRestaurar(categoria._id)}
-                className="p-2 rounded-lg hover:bg-green-50 border border-transparent hover:border-green-100 text-gray-400 hover:text-green-500 transition">
-                <RotateCcw size={15} />
+                className="p-2 hover:bg-white/8 border border-white/10 text-white/35 hover:text-white/70 transition">
+                <RotateCcw size={13} />
               </button>
               <button onClick={() => onEliminarDefinitivo(categoria._id)}
-                className="p-2 rounded-lg hover:bg-red-50 border border-transparent hover:border-red-100 text-gray-400 hover:text-red-600 transition"
+                className="p-2 hover:bg-red-500/10 border border-white/10 text-white/35 hover:text-red-400 transition"
                 title="Eliminar definitivamente">
-                <X size={15} />
+                <X size={13} />
               </button>
             </>
           )}
@@ -95,16 +97,16 @@ const CategoriaSortable = ({
 
       {/* Panel expandible */}
       {expandidaId === categoria._id && (
-        <div className="px-3 pb-3 border-t border-gray-100 pt-3">
+        <div className="px-3 pb-3 border-t border-white/10 pt-3">
           {productosDeCategoria.length > 0 && (
             <div className="flex flex-col gap-2 mb-3">
               {productosDeCategoria.map((p) => p && (
-                <div key={p._id} className="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-gray-100">
-                  <img src={p.img} alt={p.nombreProducto} className="w-8 h-8 rounded-lg object-cover flex-shrink-0" />
-                  <span className="text-sm text-gray-700 flex-1 truncate">{p.nombreProducto}</span>
+                <div key={p._id} className="flex items-center gap-2 bg-white/5 border border-white/10 px-3 py-2">
+                  <img src={p.img} alt={p.nombreProducto} className="w-7 h-7 object-cover rounded flex-shrink-0" />
+                  <span className="text-xs text-white/60 flex-1 truncate">{p.nombreProducto}</span>
                   <button onClick={() => onQuitarProducto(categoria._id, p._id)}
-                    className="text-gray-300 hover:text-red-400 transition flex-shrink-0">
-                    <X size={14} />
+                    className="text-white/25 hover:text-red-400 transition flex-shrink-0">
+                    <X size={13} />
                   </button>
                 </div>
               ))}
@@ -112,14 +114,14 @@ const CategoriaSortable = ({
           )}
           {productosDisponibles.length > 0 ? (
             <select defaultValue="" onChange={(e) => { if (e.target.value) onAgregarProducto(categoria._id, e.target.value); e.target.value = ""; }}
-              className="w-full border border-dashed border-pink-300 rounded-lg px-3 py-2 text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-pink-300 bg-pink-50/50">
+              className="w-full bg-transparent border border-dashed border-white/20 px-3 py-2 text-xs text-white/40 focus:outline-none focus:border-white/40">
               <option value="" disabled>+ Agregar servicio</option>
               {productosDisponibles.map((p) => (
-                <option key={p._id} value={p._id}>{p.nombreProducto}</option>
+                <option key={p._id} value={p._id} className="bg-[#111111]">{p.nombreProducto}</option>
               ))}
             </select>
           ) : (
-            <p className="text-xs text-gray-400 text-center py-1">Todos los servicios ya están asignados</p>
+            <p className="text-[10px] text-white/30 text-center py-1">Todos los servicios ya están asignados</p>
           )}
         </div>
       )}
@@ -322,37 +324,37 @@ const GestionCategorias = () => {
       {ConfirmDialog}
 
       {/* Formulario */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-6">
+      <div className="bg-[#111111] border border-white/10 p-6">
+        <h2 className="text-sm font-medium tracking-wide text-white mb-6">
           {editandoId ? "Editar categoría" : "Nueva categoría"}
         </h2>
 
-        {error && <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm">{error}</div>}
-        {exito && <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl mb-4 text-sm">{exito}</div>}
+        {error && <div className="border border-red-500/20 text-red-400 px-4 py-3 mb-4 text-xs">{error}</div>}
+        {exito && <div className="border border-white/10 bg-white/5 text-white/60 px-4 py-3 mb-4 text-xs">{exito}</div>}
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre</label>
+            <label className="block text-[10px] tracking-[0.15em] uppercase text-white/35 mb-2">Nombre</label>
             <input name="nombreCategoria" value={form.nombreCategoria} onChange={handleChange}
               placeholder="Faciales, Corporales..." required
-              className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300" />
+              className="w-full bg-transparent border border-white/15 p-2.5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-white/40 transition" />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+            <label className="block text-[10px] tracking-[0.15em] uppercase text-white/35 mb-2">Descripción</label>
             <textarea name="descripcion" value={form.descripcion} onChange={handleChange}
               placeholder="Descripción de la categoría..." rows={3}
-              className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300" />
+              className="w-full bg-transparent border border-white/15 p-2.5 text-sm text-white placeholder:text-white/20 focus:outline-none focus:border-white/40 transition" />
           </div>
 
           <div className="flex gap-3 mt-2">
             <button type="submit" disabled={cargando}
-              className="flex-1 bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 rounded-xl transition disabled:opacity-60 text-sm">
+              className="flex-1 bg-white text-black hover:bg-white/90 py-3 text-[11px] font-semibold tracking-[0.2em] uppercase transition disabled:opacity-40">
               {cargando ? "Guardando..." : editandoId ? "Actualizar" : "Crear categoría"}
             </button>
             {editandoId && (
               <button type="button" onClick={handleCancelar}
-                className="flex-1 border border-gray-200 text-gray-600 font-semibold py-3 rounded-xl hover:bg-gray-50 transition text-sm">
+                className="flex-1 border border-white/20 text-white/50 hover:text-white hover:border-white/40 py-3 text-[11px] tracking-[0.2em] uppercase transition">
                 Cancelar
               </button>
             )}
@@ -361,14 +363,14 @@ const GestionCategorias = () => {
       </div>
 
       {/* Lista con drag & drop */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-lg font-semibold text-gray-800 mb-2">
-          Categorías <span className="text-gray-400 font-normal text-sm">({categorias.length})</span>
+      <div className="bg-[#111111] border border-white/10 p-6">
+        <h2 className="text-sm font-medium tracking-wide text-white mb-1">
+          Categorías <span className="text-white/30 font-normal">({categorias.length})</span>
         </h2>
-        <p className="text-xs text-gray-400 mb-4">Arrastrá para cambiar el orden</p>
+        <p className="text-[10px] tracking-widest uppercase text-white/25 mb-4">Arrastrá para cambiar el orden</p>
 
         {categorias.length === 0 ? (
-          <p className="text-gray-400 text-center py-12 text-sm">No hay categorías aún</p>
+          <p className="text-white/30 text-center py-12 text-sm">No hay categorías aún</p>
         ) : (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={categorias.map((c) => c._id)} strategy={verticalListSortingStrategy}>

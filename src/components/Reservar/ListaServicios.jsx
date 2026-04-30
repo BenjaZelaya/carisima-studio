@@ -30,7 +30,7 @@ const ListaServicios = ({
   });
 
   return (
-    <div className="w-full bg-white rounded-3xl p-5 sm:p-6 lg:p-8 shadow-sm border border-gray-100">
+    <div className="w-full bg-[#111111] border border-white/10 p-5 sm:p-6 lg:p-8">
       
       <BuscadorServicios
         busqueda={busqueda}
@@ -40,20 +40,17 @@ const ListaServicios = ({
         onCategoria={onCategoria}
       />
 
-      <div className="mt-8 space-y-4 sm:space-y-5">
+      <div className="mt-6 space-y-3">
         {serviciosFiltrados.length === 0 ? (
-          <div className="text-center py-20 text-gray-500">
-            <p className="text-xl">No encontramos servicios</p>
-            <p className="text-sm mt-3">
-              Intentá con otra búsqueda o categoría
-            </p>
+          <div className="text-center py-20 text-white/30">
+            <p className="text-sm">No encontramos servicios</p>
           </div>
         ) : (
           serviciosFiltrados.map((servicio, index) => (
             <div
               key={`${servicio._id}-${busqueda}-${categoriaActiva}`}
               className="cascade-item"
-              style={{ animationDelay: `${index * 0.08}s` }}
+              style={{ animationDelay: `${index * 0.06}s` }}
             >
               <TarjetaServicio
                 servicio={servicio}

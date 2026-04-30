@@ -17,21 +17,21 @@ const ResumenServicio = ({ servicios, fechaSeleccionada, horarioSeleccionado, on
   const fechaFormateada = formatearFecha();
 
   return (
-    <div className="bg-white rounded-3xl p-6 shadow-xl border border-gray-100 lg:sticky lg:top-8">
-      <h2 className="text-xl font-bold text-gray-800 mb-5">Resumen</h2>
+    <div className="bg-[#111111] border border-white/10 p-6 lg:sticky lg:top-8">
+      <h2 className="font-serif text-xl font-light text-white mb-6">Resumen</h2>
 
       {/* Servicios */}
-      <div className="flex flex-col gap-3 mb-5">
+      <div className="flex flex-col gap-3 mb-6">
         {servicios.map((s) => (
-          <div key={s._id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+          <div key={s._id} className="flex items-center gap-3">
             <img
               src={s.img}
               alt={s.nombreProducto}
-              className="w-12 h-12 rounded-xl object-cover flex-shrink-0"
+              className="w-12 h-12 object-cover flex-shrink-0"
             />
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-sm text-gray-800 truncate">{s.nombreProducto}</p>
-              <p className="text-xs text-[#ff7bed] font-medium">
+              <p className="font-serif text-sm font-light text-white/70 truncate">{s.nombreProducto}</p>
+              <p className="text-xs text-white/30">
                 AR${Number(s.precio).toLocaleString()}
               </p>
             </div>
@@ -39,19 +39,19 @@ const ResumenServicio = ({ servicios, fechaSeleccionada, horarioSeleccionado, on
         ))}
       </div>
 
-      {/* Fecha y hora seleccionada */}
+      {/* Fecha seleccionada */}
       {fechaFormateada && (
-        <div className="bg-[#ff7bed]/5 border border-[#ff7bed]/20 rounded-xl px-4 py-3 mb-5">
-          <p className="text-xs text-gray-500 mb-0.5">Turno seleccionado</p>
-          <p className="text-sm font-semibold text-[#ff7bed]">{fechaFormateada}</p>
+        <div className="border border-white/10 px-4 py-3 mb-6">
+          <p className="text-xs text-white/30 mb-1 tracking-wide">Turno seleccionado</p>
+          <p className="text-sm text-white/70">{fechaFormateada}</p>
         </div>
       )}
 
       {/* Total */}
-      <div className="border-t border-gray-100 pt-4 mb-5">
+      <div className="border-t border-white/10 pt-4 mb-6">
         <div className="flex justify-between items-center">
-          <span className="text-gray-600 font-medium">Total</span>
-          <span className="text-2xl font-black text-[#ff7bed]">
+          <span className="text-white/40 text-sm">Total</span>
+          <span className="font-serif text-xl font-light text-white">
             AR${total.toLocaleString()}
           </span>
         </div>
@@ -61,10 +61,10 @@ const ResumenServicio = ({ servicios, fechaSeleccionada, horarioSeleccionado, on
       <button
         onClick={onContinuar}
         disabled={!fechaSeleccionada || !horarioSeleccionado}
-        className={`w-full py-4 rounded-2xl font-bold text-sm uppercase tracking-wide transition-all ${
+        className={`w-full py-3.5 text-sm font-medium tracking-widest uppercase transition-all duration-300 border ${
           fechaSeleccionada && horarioSeleccionado
-            ? "bg-[#ff7bed] text-white hover:bg-[#e85ed8] shadow-md hover:shadow-lg"
-            : "bg-gray-100 text-gray-400 cursor-not-allowed"
+            ? "border-white/30 text-white hover:bg-white hover:text-black"
+            : "border-white/10 text-white/20 cursor-not-allowed"
         }`}
       >
         Continuar al pago

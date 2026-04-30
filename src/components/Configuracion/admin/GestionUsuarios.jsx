@@ -80,28 +80,28 @@ const GestionUsuarios = () => {
       {ConfirmDialog}
       {/* Buscador */}
       <div className="relative mb-5">
-        <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-white/30" />
         <input
           type="text"
           placeholder="Buscar por nombre, email o teléfono..."
           value={busqueda}
           onChange={(e) => setBusqueda(e.target.value)}
-          className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-pink-200"
+          className="w-full pl-9 pr-4 py-2.5 bg-transparent border border-white/15 text-white text-sm placeholder:text-white/25 focus:outline-none focus:border-white/40 transition"
         />
       </div>
 
       {cargando && (
-        <p className="text-center text-gray-400 py-10">Cargando usuarios...</p>
+        <p className="text-center text-white/30 py-10">Cargando usuarios...</p>
       )}
 
       {error && (
-        <p className="text-center text-red-500 py-10">{error}</p>
+        <p className="text-center text-red-400 py-10">{error}</p>
       )}
 
       {!cargando && !error && usuariosFiltrados.length === 0 && (
-        <div className="text-center py-12 text-gray-400">
-          <UserCircle2 size={40} className="mx-auto mb-3 opacity-30" />
-          <p className="font-medium">No hay usuarios registrados</p>
+        <div className="text-center py-12 text-white/30">
+          <UserCircle2 size={40} className="mx-auto mb-3 opacity-20" />
+          <p className="text-sm">No hay usuarios registrados</p>
         </div>
       )}
 
@@ -113,30 +113,30 @@ const GestionUsuarios = () => {
             return (
               <div
                 key={u._id}
-                className="bg-white border border-gray-100 rounded-2xl p-4 flex items-center gap-4 shadow-sm"
+                className="bg-[#111111] border border-white/10 p-4 flex items-center gap-4"
               >
                 {/* Avatar inicial */}
-                <div className="w-10 h-10 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center font-bold text-base shrink-0 uppercase">
+                <div className="w-8 h-8 border border-white/15 flex items-center justify-center text-white/50 text-xs font-semibold shrink-0 uppercase">
                   {u.nombre?.[0] || "?"}
                 </div>
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="font-semibold text-gray-800 text-sm truncate">
+                    <p className="text-sm text-white truncate">
                       {u.nombre} {u.apellido}
                     </p>
                     {esAdmin && (
-                      <span className="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full font-medium">
+                      <span className="text-[10px] border border-white/15 text-white/50 px-2 py-0.5 tracking-widest uppercase">
                         Admin
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-gray-500 truncate">{u.email}</p>
+                  <p className="text-xs text-white/40 truncate">{u.email}</p>
                   {u.telefono && (
-                    <p className="text-xs text-gray-400">{u.telefono}</p>
+                    <p className="text-xs text-white/30">{u.telefono}</p>
                   )}
-                  <p className="text-xs text-gray-400 mt-0.5">
+                  <p className="text-xs text-white/25 mt-0.5">
                     Registrado: {formatearFecha(u.createdAt)}
                   </p>
                 </div>
@@ -146,7 +146,7 @@ const GestionUsuarios = () => {
                   <button
                     onClick={() => handleEliminar(u._id, `${u.nombre} ${u.apellido}`)}
                     disabled={eliminando === u._id}
-                    className="shrink-0 p-2 rounded-xl border border-red-100 text-red-400 hover:bg-red-50 transition disabled:opacity-50"
+                    className="shrink-0 p-2 border border-red-500/20 text-red-400 hover:bg-red-500/10 transition disabled:opacity-40"
                     title="Eliminar usuario"
                   >
                     <Trash2 size={16} />
@@ -158,7 +158,7 @@ const GestionUsuarios = () => {
         </div>
       )}
 
-      <p className="text-xs text-gray-400 text-right mt-4">
+      <p className="text-[10px] tracking-widest text-white/25 text-right mt-4">
         {usuariosFiltrados.length} usuario{usuariosFiltrados.length !== 1 ? "s" : ""}
       </p>
     </div>

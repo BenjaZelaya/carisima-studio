@@ -2,7 +2,7 @@
 const ListaHorarios = ({ turnos, horarioSeleccionado, onSeleccionar }) => {
   if (!turnos || turnos.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-400 text-sm">
+      <div className="text-center py-8 text-white/25 text-xs tracking-wide mt-6">
         No hay horarios disponibles para este día
       </div>
     );
@@ -10,51 +10,35 @@ const ListaHorarios = ({ turnos, horarioSeleccionado, onSeleccionar }) => {
 
   const formatearHora = (hora) => {
     const [h, m] = hora.split(":").map(Number);
-    return { hora: `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}` };
+    return `${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}`;
   };
 
-  // Normaliza para manejar tanto strings como objetos { hora, ocupado }
   const turnosNormalizados = turnos.map((t) =>
     typeof t === "string" ? { hora: t, ocupado: false } : t
   );
 
   return (
-    <div className="mt-6">
-      <h3 className="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wide">
+    <div className="mt-8">
+      <p className="text-xs tracking-widest uppercase text-white/30 mb-4">
         Horarios disponibles
-      </h3>
-      <div
-        className="flex flex-col gap-2 max-h-[340px] overflow-y-auto pr-1"
-        style={{ scrollbarWidth: "thin", scrollbarColor: "#ff7bed transparent" }}
-      >
+      </p>
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {turnosNormalizados.map(({ hora, ocupado }) => {
-          const { hora: horaFormateada } = formatearHora(hora);
           const esSeleccionado = horarioSeleccionado === hora;
-
           return (
             <button
               key={hora}
               onClick={() => !ocupado && onSeleccionar(hora)}
               disabled={ocupado}
-              className={`flex items-center justify-between px-5 py-3.5 rounded-xl border-2 transition-all ${
+              className={`py-3 px-4 border text-sm transition-all ${
                 ocupado
-                  ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed opacity-60"
+                  ? "border-white/5 text-white/15 cursor-not-allowed"
                   : esSeleccionado
-                  ? "border-[#ff7bed] bg-[#ff7bed]/5 text-[#ff7bed]"
-                  : "border-gray-100 bg-gray-50 hover:border-[#ff7bed]/40 hover:bg-pink-50/50 text-gray-700"
+                  ? "border-white bg-white text-black font-medium"
+                  : "border-white/15 text-white/50 hover:border-white/40 hover:text-white"
               }`}
             >
-              <div className="flex items-center gap-2">
-                <span className="text-sm">🕐</span>
-                <span className="font-semibold">{horaFormateada}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                {ocupado && (
-                  <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-400">
-                    Reservado
-                  </span>
-                )}
-              </div>
+              {formatearHora(hora)}
             </button>
           );
         })}

@@ -68,10 +68,10 @@ const CambiarHorarioModal = ({ turno, isOpen, onClose, onSuccess, token }) => {
         return;
       }
 
-      // Filtrar solo los horarios que NO están ocupados
+      // Filtrar solo los horarios que NO están ocupados (maneja strings y objetos)
       const horariosLibres = diaDisponible.turnos
-        ?.filter((t) => !t.ocupado)
-        .map((t) => t.hora) || [];
+        ?.filter((t) => typeof t === 'string' || !t.ocupado)
+        .map((t) => typeof t === 'string' ? t : t.hora) || [];
 
       setHorariosDisponibles(horariosLibres);
       
@@ -133,50 +133,48 @@ const CambiarHorarioModal = ({ turno, isOpen, onClose, onSuccess, token }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="bg-white rounded-3xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+      <div className="bg-[#111111] border border-white/15 w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-gray-100 sticky top-0 bg-white rounded-t-3xl">
-          <h2 className="text-2xl font-bold text-gray-800">Cambiar horario</h2>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-full transition"
-          >
-            <X size={24} className="text-gray-600" />
+        <div className="flex items-center justify-between px-6 py-5 border-b border-white/10 sticky top-0 bg-[#111111] z-10">
+          <div>
+            <p className="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-0.5">Turno</p>
+            <h2 className="text-sm font-medium text-white tracking-wide">Cambiar horario</h2>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-white/8 transition text-white/40">
+            <X size={16} />
           </button>
         </div>
 
         {/* Contenido */}
-        <div className="p-6">
+        <div className="p-6 flex-1">
           {/* Resumen del turno actual */}
-          <div className="bg-gray-50 rounded-2xl p-4 mb-6">
-            <p className="text-xs text-gray-500 uppercase font-medium mb-2">Turno actual</p>
-            <p className="text-sm text-gray-700">
-              <span className="font-semibold">
+          <div className="border border-white/10 bg-white/4 px-4 py-3 mb-6">
+            <p className="text-[10px] tracking-[0.15em] uppercase text-white/30 mb-1.5">Turno actual</p>
+            <p className="text-sm text-white/60">
+              <span className="text-white/90">
                 {new Date(turno?.fecha + 'T00:00:00').toLocaleDateString('es-AR')}
               </span>
               {' a las '}
-              <span className="font-semibold">{turno?.horaInicio}hs</span>
+              <span className="text-white/90">{turno?.horaInicio}hs</span>
             </p>
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
-              <p className="text-sm text-red-600">{error}</p>
+            <div className="border border-red-500/20 bg-red-500/8 px-4 py-3 mb-6">
+              <p className="text-xs text-red-400">{error}</p>
             </div>
           )}
 
           {loading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 size={32} className="text-pink-500 animate-spin" />
+            <div className="flex justify-center py-16">
+              <Loader2 size={22} className="text-white/40 animate-spin" />
             </div>
           ) : (
             <>
               {/* Selector de fecha */}
               <div className="mb-8">
-                <h3 className="text-sm font-semibold text-gray-700 mb-4 uppercase tracking-wide">
-                  Selecciona nueva fecha
-                </h3>
+                <p className="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-5">Seleccioná nueva fecha</p>
                 <CalendarioSemanal
                   disponibilidad={disponibilidad}
                   fechaSeleccionada={fechaSeleccionada}
@@ -199,14 +197,14 @@ const CambiarHorarioModal = ({ turno, isOpen, onClose, onSuccess, token }) => {
 
               {/* Resumen del nuevo horario */}
               {fechaSeleccionada && horaSeleccionada && (
-                <div className="bg-blue-50 rounded-2xl p-4 mb-6 border border-blue-100">
-                  <p className="text-xs text-blue-600 uppercase font-medium mb-2">Nuevo horario</p>
-                  <p className="text-sm text-blue-900">
-                    <span className="font-semibold">
+                <div className="border border-white/15 bg-white/5 px-4 py-3 mb-2">
+                  <p className="text-[10px] tracking-[0.15em] uppercase text-white/30 mb-1.5">Nuevo horario</p>
+                  <p className="text-sm text-white/80">
+                    <span className="text-white">
                       {new Date(fechaSeleccionada + 'T00:00:00').toLocaleDateString('es-AR')}
                     </span>
                     {' a las '}
-                    <span className="font-semibold">{horaSeleccionada}hs</span>
+                    <span className="text-white">{horaSeleccionada}hs</span>
                   </p>
                 </div>
               )}
@@ -215,20 +213,20 @@ const CambiarHorarioModal = ({ turno, isOpen, onClose, onSuccess, token }) => {
         </div>
 
         {/* Footer */}
-        <div className="flex gap-3 p-6 border-t border-gray-100 bg-gray-50 rounded-b-3xl sticky bottom-0">
+        <div className="flex gap-3 px-6 py-5 border-t border-white/10 sticky bottom-0 bg-[#111111]">
           <button
             onClick={onClose}
             disabled={enviando}
-            className="flex-1 px-6 py-3 rounded-xl border border-gray-300 text-gray-700 font-medium hover:bg-gray-100 transition disabled:opacity-50"
+            className="flex-1 py-3 border border-white/15 text-white/50 text-xs tracking-[0.15em] uppercase hover:bg-white/5 hover:text-white transition disabled:opacity-40"
           >
             Cancelar
           </button>
           <button
             onClick={handleCambiar}
             disabled={enviando || !fechaSeleccionada || !horaSeleccionada || loading}
-            className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-pink-500 text-white font-medium rounded-xl hover:bg-pink-600 transition disabled:opacity-50"
+            className="flex-1 flex items-center justify-center gap-2 py-3 bg-white text-black text-xs font-semibold tracking-[0.15em] uppercase hover:bg-white/90 transition disabled:opacity-40"
           >
-            {enviando && <Loader2 size={18} className="animate-spin" />}
+            {enviando && <Loader2 size={14} className="animate-spin" />}
             {enviando ? 'Cambiando...' : 'Confirmar cambio'}
           </button>
         </div>

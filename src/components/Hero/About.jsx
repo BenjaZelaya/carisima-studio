@@ -1,7 +1,5 @@
-
 import ValueCard from "./About/ValueCard";
 import ProfessionalCard from "./About/ProfessionalCard";
-import ImageReveal from "./About/ImageReveal";
 import aboutImg from "../../assets/about.jpg";
 import pro1Img from "../../assets/pro1.jpg";
 import pro2Img from "../../assets/pro2.jpg";
@@ -11,140 +9,132 @@ import img2 from "../../assets/esteticaimg2.jpg";
 
 export default function About() {
   return (
-    <main className="bg-white text-black">
+    <main className="bg-[#0a0a0a] text-white">
 
-      {/* HERO */}
-      <section className="relative bg-[#0B0B0B] text-white overflow-hidden">
-        <div className="max-w-6xl mx-auto px-6 py-28 grid md:grid-cols-2 gap-12 items-center">
+      {/* DIVIDER */}
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="h-px bg-white/10" />
+      </div>
 
-          <div>
-            <h1 className="text-4xl md:text-5xl font-light tracking-wide leading-tight">
-              Tu belleza,<br />
-              <span className="text-[#E6A6C7] font-medium">
-                en manos expertas
-              </span>
-            </h1>
-
-            <p className="mt-6 text-gray-300 leading-relaxed">
-              En Carrissima Studio combinamos estética, bienestar y
-              profesionalismo para que te sientas segura, cuidada
-              y auténtica en cada tratamiento.
-            </p>
-
-            <button className="
-              mt-10 px-10 py-4 rounded-full
-              border-2 border-[#E6A6C7]
-              text-[#E6A6C7]
-              hover:bg-[#E6A6C7]
-              hover:text-black
-              transition-all duration-300
-            ">
-              Reservar consulta
-            </button>
+      {/* HERO ABOUT */}
+      <section className="max-w-6xl mx-auto px-6 py-28 grid md:grid-cols-2 gap-16 items-center">
+        <div>
+          <p className="text-xs tracking-widest2 uppercase text-white/30 mb-6 font-sans">The Sanctuary</p>
+          <h2 className="font-serif text-4xl md:text-5xl font-light leading-tight">
+            Expertise Rooted in<br />
+            <span className="italic">Precision.</span>
+          </h2>
+          <p className="mt-8 text-white/50 leading-relaxed text-sm max-w-sm">
+            Carissima es más que un estudio; es un santuario clínico donde la
+            ciencia se encuentra con la estética de alta gama. Creemos en la
+            aplicación meticulosa de protocolos avanzados, adaptados
+            específicamente a la arquitectura única de tu piel.
+          </p>
+          <div className="flex gap-12 mt-12">
+            <div>
+              <p className="text-3xl font-serif font-light">01</p>
+              <p className="text-xs tracking-widest uppercase text-white/30 mt-1">Clinical Grade</p>
+            </div>
+            <div>
+              <p className="text-3xl font-serif font-light">02</p>
+              <p className="text-xs tracking-widest uppercase text-white/30 mt-1">Elite Curation</p>
+            </div>
           </div>
+        </div>
 
-          <div className="relative">
-            <div className="absolute inset-0 border-2 border-[#E6A6C7] rounded-3xl translate-x-4 translate-y-4"></div>
-            <img
-              src={aboutImg}
-              alt="Carrissima Studio"
-              className="relative rounded-3xl object-cover"
-            />
-          </div>
-
+        <div className="relative">
+          <img
+            src={aboutImg}
+            alt="Carissima Studio"
+            className="w-full object-cover contrast-110"
+            style={{ aspectRatio: "3/4", maxHeight: "520px" }}
+          />
         </div>
       </section>
 
+      {/* DIVIDER */}
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="h-px bg-white/10" />
+      </div>
+
       {/* VALORES */}
-      <section className="py-24 bg-[#F7E6EF]">
+      <section className="py-28 bg-[#0a0a0a]">
         <div className="max-w-6xl mx-auto px-6">
-
-          <h2 className="text-3xl text-center font-light mb-16">
-            Una experiencia pensada para vos
+          <p className="text-xs tracking-widest2 uppercase text-white/30 mb-4 text-center">Specialized</p>
+          <h2 className="font-serif text-3xl md:text-4xl font-light text-center mb-20">
+            Clinical Services
           </h2>
-
-          <div className="grid md:grid-cols-3 gap-10">
+          <div className="grid md:grid-cols-3 gap-8">
             <ValueCard
-              title="Resultados reales"
+              title="Resultados Reales"
               text="Tratamientos personalizados que respetan tu esencia natural."
             />
             <ValueCard
-              title="Tecnología avanzada"
-              text="Equipos modernos y protocolos profesionales."
+              title="Tecnología Avanzada"
+              text="Equipos modernos y protocolos profesionales de última generación."
             />
             <ValueCard
-              title="Atención humana"
-              text="Cada sesión es un espacio de cuidado y confianza."
+              title="Atención Humana"
+              text="Cada sesión es un espacio de cuidado, precisión y confianza."
             />
           </div>
-
         </div>
       </section>
 
+      {/* DIVIDER */}
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="h-px bg-white/10" />
+      </div>
+
       {/* PROFESIONALES */}
-      <section className="py-28 bg-white">
+      <section className="py-28 bg-[#0a0a0a]">
         <div className="max-w-6xl mx-auto px-6">
-
-          <h2 className="text-3xl text-center font-light mb-20">
-            Nuestro equipo profesional
+          <p className="text-xs tracking-widest2 uppercase text-white/30 mb-4 text-center">The Curators</p>
+          <h2 className="font-serif text-3xl md:text-4xl font-light text-center mb-20">
+            Clinical Practitioners
           </h2>
-
-          <div className="grid md:grid-cols-3 gap-12">
+          <div className="grid md:grid-cols-3 gap-10">
             <ProfessionalCard
               name="Carla Martínez"
-              role="Cosmetóloga & Esteticista"
+              role="Head of Aesthetics"
               description="Especialista en tratamientos faciales personalizados y cuidado de la piel."
               image={pro1Img}
             />
-
             <ProfessionalCard
               name="Lucía Gómez"
-              role="Dermocosmiatra"
+              role="Dermal Specialist"
               description="Enfoque integral en bienestar, estética corporal y tecnología avanzada."
               image={pro2Img}
             />
-
             <ProfessionalCard
               name="María Fernández"
-              role="Especialista en estética corporal"
+              role="Bio-Tech Lead"
               description="Acompañamiento profesional con resultados reales y seguros."
               image={pro3Img}
             />
           </div>
-
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 bg-white text-center">
-        <h3 className="text-3xl font-light mb-6">
-          Tu momento empieza hoy
-        </h3>
+      {/* DIVIDER */}
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="h-px bg-white/10" />
+      </div>
 
-        <p className="text-gray-600 max-w-xl mx-auto mb-10">
-          Elegí sentirte bien, verte bien y cuidarte con quienes
-          entienden tu belleza.
-        </p>
-
-        <button className="
-          px-12 py-4 rounded-full
-          bg-black text-white
-          hover:bg-[#E6A6C7]
-          hover:text-black
-          transition-all duration-300
-        ">
-          Ver agenda
-        </button>
+      {/* GALERÍA */}
+      <section className="max-w-6xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-6">
+        <img src={img1} alt="Estética profesional" className="w-full object-cover contrast-110" style={{ aspectRatio: "4/3" }} />
+        <img src={img2} alt="Tratamientos premium" className="w-full object-cover contrast-110" style={{ aspectRatio: "4/3" }} />
       </section>
 
-      <section className="max-w-6xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-10">
-        <ImageReveal src={img1} alt="Estética profesional" />
-        <ImageReveal src={img2} alt="Tratamientos premium" />
+      {/* FOOTER CTA */}
+      <section className="py-24 bg-[#0a0a0a] text-center border-t border-white/10">
+        <p className="text-xs tracking-widest2 uppercase text-white/30 mb-4">Visit Us</p>
+        <h3 className="font-serif text-3xl font-light mb-6">Location &amp; Hours</h3>
+        <p className="text-white/40 text-sm mb-2">Lamadrid 117, T4000 San Miguel de Tucumán, Tucumán, Argentina</p>
+        <p className="text-white/30 text-xs tracking-wide">Lun – Vie: 09:00 – 20:00 &nbsp;|&nbsp; Sáb: 10:00 – 16:00</p>
       </section>
 
     </main>
   );
 }
-
-
-

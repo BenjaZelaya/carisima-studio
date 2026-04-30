@@ -77,29 +77,29 @@ const ConfigGeneral = ({ onActualizar }) => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+    <div className="bg-[#111111] border border-white/10 p-6">
       <div className="flex items-center gap-2 mb-5">
-        <Settings size={18} className="text-pink-400" />
-        <h2 className="text-lg font-semibold text-gray-800">Configuración general</h2>
+        <Settings size={16} className="text-white/40" />
+        <h2 className="text-sm font-medium tracking-wide text-white">Configuración general</h2>
       </div>
 
-      {error && <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm">{error}</div>}
-      {exito && <div className="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl mb-4 text-sm">{exito}</div>}
+      {error && <div className="border border-red-500/20 text-red-400 px-4 py-3 mb-4 text-xs">{error}</div>}
+      {exito && <div className="border border-white/10 bg-white/5 text-white/60 px-4 py-3 mb-4 text-xs">{exito}</div>}
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         {/* Días laborales */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Días laborales por defecto</label>
+          <label className="block text-[10px] tracking-[0.15em] uppercase text-white/35 mb-3">Días laborales por defecto</label>
           <div className="flex gap-2 flex-wrap">
             {DIAS.map(({ num, label }) => (
               <button
                 key={num}
                 type="button"
                 onClick={() => toggleDia(num)}
-                className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
+                className={`px-3 py-2 text-xs tracking-widest uppercase transition ${
                   form.diasLaborales.includes(num)
-                    ? "bg-pink-500 text-white shadow-sm shadow-pink-200"
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                    ? "bg-white text-black"
+                    : "border border-white/15 text-white/40 hover:bg-white/5"
                 }`}
               >
                 {label}
@@ -110,24 +110,24 @@ const ConfigGeneral = ({ onActualizar }) => {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Hora inicio</label>
+            <label className="block text-[10px] tracking-[0.15em] uppercase text-white/35 mb-2">Hora inicio</label>
             <input type="time" value={form.horaInicio}
               onChange={(e) => setForm({ ...form, horaInicio: e.target.value })}
-              className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300" />
+              className="w-full bg-transparent border border-white/15 p-2.5 text-sm text-white focus:outline-none focus:border-white/40 transition" />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Hora fin</label>
+            <label className="block text-[10px] tracking-[0.15em] uppercase text-white/35 mb-2">Hora fin</label>
             <input type="time" value={form.horaFin}
               onChange={(e) => setForm({ ...form, horaFin: e.target.value })}
-              className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300" />
+              className="w-full bg-transparent border border-white/15 p-2.5 text-sm text-white focus:outline-none focus:border-white/40 transition" />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Duración del turno (minutos)</label>
+          <label className="block text-[10px] tracking-[0.15em] uppercase text-white/35 mb-2">Duración del turno (minutos)</label>
           <select value={form.duracionTurno}
             onChange={(e) => setForm({ ...form, duracionTurno: Number(e.target.value) })}
-            className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300">
+            className="w-full bg-[#111111] border border-white/15 p-2.5 text-sm text-white/70 focus:outline-none focus:border-white/40 transition">
             <option value={15}>15 minutos</option>
             <option value={30}>30 minutos</option>
             <option value={45}>45 minutos</option>
@@ -138,20 +138,20 @@ const ConfigGeneral = ({ onActualizar }) => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Personas por turno (capacidad)</label>
+          <label className="block text-[10px] tracking-[0.15em] uppercase text-white/35 mb-2">Personas por turno (capacidad)</label>
           <input
             type="number"
             min={1}
             max={20}
             value={form.capacidadPorTurno}
             onChange={(e) => setForm({ ...form, capacidadPorTurno: Number(e.target.value) })}
-            className="w-full border border-gray-200 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-pink-300"
+            className="w-full bg-transparent border border-white/15 p-2.5 text-sm text-white/70 focus:outline-none focus:border-white/40 transition"
           />
-          <p className="text-xs text-gray-400 mt-1">Cuántas personas pueden reservar el mismo horario</p>
+          <p className="text-[10px] text-white/25 mt-1">Cuántas personas pueden reservar el mismo horario</p>
         </div>
 
         <button type="submit" disabled={cargando}
-          className="w-full bg-pink-500 hover:bg-pink-600 text-white font-semibold py-3 rounded-xl transition disabled:opacity-60 text-sm mt-2">
+          className="w-full bg-white text-black hover:bg-white/90 py-3 text-[11px] font-semibold tracking-[0.2em] uppercase transition disabled:opacity-40 mt-2">
           {cargando ? "Guardando..." : "Guardar configuración"}
         </button>
       </form>
