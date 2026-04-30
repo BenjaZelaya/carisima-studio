@@ -243,6 +243,26 @@ const Pago = () => {
 
   if (servicios.length === 0 && !turnoCreado) return null;
 
+  if (exito) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] px-6">
+        <div className="bg-white rounded-2xl shadow-lg p-10 max-w-md w-full text-center">
+          <p className="text-5xl mb-4">🎉</p>
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">¡Comprobante enviado!</h1>
+          <p className="text-gray-500 text-sm mb-6">
+            Tu turno está pendiente de confirmación. Te avisaremos cuando esté confirmado.
+          </p>
+          <button
+            onClick={() => navigate("/configuracion")}
+            className="w-full bg-[#ff7bed] hover:bg-[#ff6bd8] text-white font-semibold py-3 rounded-xl transition"
+          >
+            Ver mis turnos
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] px-6 py-10">
       <div className="max-w-5xl mx-auto">
@@ -260,20 +280,6 @@ const Pago = () => {
             <span className="text-[#ff7bed] font-bold">Pagar</span>
           </div>
         </div>
-
-        {exito && (
-          <div className="bg-green-50 border border-green-200 rounded-2xl p-6 mb-6 text-center">
-            <p className="text-2xl mb-2">🎉</p>
-            <p className="font-bold text-green-700 text-lg">¡Comprobante enviado!</p>
-            <p className="text-green-600 text-sm mt-1">
-              Tu turno está pendiente de confirmación. Te avisaremos por WhatsApp cuando esté confirmado.
-            </p>
-            <button onClick={() => navigate("/configuracion")}
-              className="mt-4 bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-xl transition text-sm">
-              Ver mis turnos
-            </button>
-          </div>
-        )}
 
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
