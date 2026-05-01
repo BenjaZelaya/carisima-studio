@@ -29,7 +29,12 @@ const AgendarSesionModal = ({ packCompraId, sesion, onClose, onSuccess }) => {
         );
         const data = await res.json();
         if (!res.ok) throw new Error(data.msg || "Error al cargar disponibilidad");
-        setDisponibilidad(data.disponibilidad || []);
+        // El endpoint devuelve el array directamente (no envuelto en { disponibilidad: [] })
+        const lista = Array.isArray(data) ? data : (data.disponibilidad || []);
+        setDisponibilidad(lista);
+        // Seleccionar el primer día disponible automáticamente
+        const primerDia = lista.find((d) => d.disponible);
+        if (primerDia) setFechaSeleccionada(primerDia.fecha);
       } catch (err) {
         setError(err.message || "Error al cargar disponibilidad");
       } finally {
