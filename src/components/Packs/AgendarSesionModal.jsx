@@ -18,48 +18,50 @@ const AgendarSesionModal = ({ packCompraId, sesion, onClose, onSuccess }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const cargar = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const hoy = new Date().toISOString().split("T")[0];
-        const res = await fetch(
-          `${import.meta.env.VITE_API_URL}/horarios/disponibilidad?fecha=${hoy}`,
-          { headers: { "x-token": token } }
-        );
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.msg || "Error al cargar disponibilidad");
-        // El endpoint devuelve el array directamente (no envuelto en { disponibilidad: [] })
-        const lista = Array.isArray(data) ? data : (data.disponibilidad || []);
-        setDisponibilidad(lista);
-        // Seleccionar el primer día disponible automáticamente
-        const primerDia = lista.find((d) => d.disponible);
-        if (primerDia) setFechaSeleccionada(primerDia.fecha);
-      } catch (err) {
-        setError(err.message || "Error al cargar disponibilidad");
-      } finally {
-        setLoading(false);
-      }
-    };
-    cargar();
-  }, [token]);
+    cargarDisponibilidad();
+  }, []);
+
+  const cargarDisponibilidad = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/horarios/disponibilidad`,
+        { headers: { "x-token": token } }
+      );
+      if (!res.ok) throw new Error("Error al cargar disponibilidad");
+      const data = await res.json();
+      setDisponibilidad(data);
+      // Seleccionar el primer día disponible con horarios libres
+      const primerDia = data?.find(
+        (d) => d.disponible && d.turnos?.some((t) => !t.ocupado)
+      );
+      setFechaSeleccionada(primerDia?.fecha || data?.[0]?.fecha || null);
+    } catch (err) {
+      setError("Error al cargar disponibilidad");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Actualizar horarios al cambiar fecha
   useEffect(() => {
-    if (!fechaSeleccionada) return;
-    setHoraSeleccionada(null);
+    if (!fechaSeleccionada || disponibilidad.length === 0) return;
     const diaDisponible = disponibilidad.find((d) => d.fecha === fechaSeleccionada);
-    const horariosLibres = diaDisponible?.turnos
+    if (!diaDisponible || !diaDisponible.disponible) {
+      setHorariosDisponibles([]);
+      setHoraSeleccionada(null);
+      return;
+    }
+    const horariosLibres = diaDisponible.turnos
       ?.filter((t) => typeof t === "string" || !t.ocupado)
       .map((t) => (typeof t === "string" ? t : t.hora)) || [];
     setHorariosDisponibles(horariosLibres);
+    setHoraSeleccionada(horariosLibres[0] || null);
   }, [fechaSeleccionada, disponibilidad]);
 
   const handleSemana = (offset) => {
-    if (offset < 0 || offset > 1) return;
     setSemanaOffset(offset);
-    setFechaSeleccionada(null);
-    setHoraSeleccionada(null);
   };
 
   const handleAgendar = async () => {
