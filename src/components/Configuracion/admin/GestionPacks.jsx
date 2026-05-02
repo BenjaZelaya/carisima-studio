@@ -21,6 +21,8 @@ const GestionPacks = () => {
   const [editandoId, setEditandoId] = useState(null);
   const [mostrarForm, setMostrarForm] = useState(false);
   const [guardando, setGuardando] = useState(false);
+  const [eliminando, setEliminando] = useState(null);
+  const [confirmEliminar, setConfirmEliminar] = useState(null); // pack a confirmar eliminar
   const [error, setError] = useState(null);
   const [imagenFile, setImagenFile] = useState(null);
   const [imagenPreview, setImagenPreview] = useState(null);
@@ -177,6 +179,24 @@ const GestionPacks = () => {
     }
   };
 
+  const eliminarPack = async (pack) => {
+    setEliminando(pack._id);
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/packs/${pack._id}`, {
+        method: "DELETE",
+        headers: { "x-token": token },
+      });
+      if (res.ok) {
+        await cargar();
+        if (editandoId === pack._id) cerrarForm();
+      }
+    } catch {
+      // silent
+    } finally {
+      setEliminando(null);
+    }
+  };
+
   return (
     <div className="flex flex-col lg:flex-row gap-8">
       {/* Lista */}
@@ -246,6 +266,17 @@ const GestionPacks = () => {
                     className="p-1.5 text-white/30 hover:text-white transition"
                   >
                     <Pencil size={14} />
+                  </button>
+                  <button
+                    onClick={() => setConfirmEliminar(pack)}
+                    disabled={eliminando === pack._id}
+                    className="p-1.5 text-white/20 hover:text-red-400 transition disabled:opacity-40"
+                    title="Eliminar pack"
+                  >
+                    {eliminando === pack._id
+                      ? <div className="w-3.5 h-3.5 border border-white/20 border-t-white/60 rounded-full animate-spin" />
+                      : <Trash2 size={14} />
+                    }
                   </button>
                 </div>
               </div>
@@ -425,6 +456,47 @@ const GestionPacks = () => {
                 {guardando ? "Guardando..." : editandoId ? "Guardar cambios" : "Crear pack"}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL CONFIRMAR ELIMINACIÓN */}
+      {confirmEliminar && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-[#111111] border border-white/15 w-full max-w-sm">
+            <div className="px-6 py-5 border-b border-white/10">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-1">Confirmar acción</p>
+              <h3 className="text-sm font-medium text-white">Eliminar pack</h3>
+            </div>
+            <div className="px-6 py-5">
+              <p className="text-sm text-white/50 leading-relaxed">
+                ¿Estás seguro que querés eliminar{" "}
+                <span className="text-white font-medium">"{confirmEliminar.nombre}"</span>?
+                Esta acción no se puede deshacer.
+              </p>
+            </div>
+            <div className="flex gap-3 px-6 pb-5">
+              <button
+                onClick={() => setConfirmEliminar(null)}
+                className="flex-1 py-2.5 border border-white/15 text-white/50 text-xs tracking-[0.15em] uppercase hover:bg-white/5 hover:text-white transition"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={() => {
+                  eliminarPack(confirmEliminar);
+                  setConfirmEliminar(null);
+                }}
+                disabled={eliminando === confirmEliminar._id}
+                className="flex-1 py-2.5 border border-red-500/40 text-red-400 text-xs tracking-[0.15em] uppercase hover:bg-red-500/10 transition disabled:opacity-40"
+              >
+                {eliminando === confirmEliminar._id ? (
+                  <div className="w-4 h-4 border border-red-400/30 border-t-red-400 rounded-full animate-spin mx-auto" />
+                ) : (
+                  "Eliminar"
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

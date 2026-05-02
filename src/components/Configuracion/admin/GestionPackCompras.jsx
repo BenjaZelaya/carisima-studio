@@ -1,7 +1,7 @@
 // src/components/Configuracion/admin/GestionPackCompras.jsx
 import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../../../context/AuthContext.jsx";
-import { ChevronDown, ChevronUp, Loader2, Check, CheckCheck, X, Layers } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2, Check, CheckCheck, X, Layers, Trash2 } from "lucide-react";
 
 const ESTADOS_PACK = {
   pendiente:  { label: "Pendiente",  color: "border-yellow-500/30 text-yellow-400" },
@@ -107,7 +107,7 @@ const SesionAdminRow = ({ sesion, compraId, onRefresh }) => {
   );
 };
 
-const PackCompraAdminCard = ({ compra, onRefresh }) => {
+const PackCompraAdminCard = ({ compra, onRefresh, onEliminar }) => {
   const { token } = useAuth();
   const [expandido, setExpandido] = useState(false);
   const [activando, setActivando] = useState(false);
@@ -216,6 +216,15 @@ const PackCompraAdminCard = ({ compra, onRefresh }) => {
             </button>
           )}
 
+          {/* Eliminar compra */}
+          <button
+            onClick={() => onEliminar(compra)}
+            className="flex items-center gap-2 border border-red-500/20 text-red-400/60 px-4 py-2 text-xs tracking-widest uppercase hover:bg-red-500/8 hover:text-red-400 transition"
+          >
+            <Trash2 size={12} />
+            Eliminar compra
+          </button>
+
           {/* Sesiones */}
           <div>
             <p className="text-[10px] tracking-[0.2em] uppercase text-white/25 mb-2">Sesiones</p>
@@ -244,6 +253,8 @@ const GestionPackCompras = () => {
   const [cargando, setCargando] = useState(true);
   const [filtro, setFiltro] = useState("todos");
   const [busqueda, setBusqueda] = useState("");
+  const [confirmEliminar, setConfirmEliminar] = useState(null);
+  const [eliminando, setEliminando] = useState(false);
 
   const cargar = useCallback(async () => {
     try {
@@ -260,6 +271,23 @@ const GestionPackCompras = () => {
   }, [token]);
 
   useEffect(() => { cargar(); }, [cargar]);
+
+  const handleEliminar = async () => {
+    if (!confirmEliminar) return;
+    setEliminando(true);
+    try {
+      await fetch(`${import.meta.env.VITE_API_URL}/packs/compras/${confirmEliminar._id}`, {
+        method: "DELETE",
+        headers: { "x-token": token },
+      });
+      setConfirmEliminar(null);
+      await cargar();
+    } catch {
+      // silent
+    } finally {
+      setEliminando(false);
+    }
+  };
 
   const comprasFiltradas = compras.filter((c) => {
     const matchFiltro = filtro === "todos" || c.estado === filtro;
@@ -316,8 +344,54 @@ const GestionPackCompras = () => {
       ) : (
         <div className="space-y-2">
           {comprasFiltradas.map((compra) => (
-            <PackCompraAdminCard key={compra._id} compra={compra} onRefresh={cargar} />
+            <PackCompraAdminCard
+              key={compra._id}
+              compra={compra}
+              onRefresh={cargar}
+              onEliminar={setConfirmEliminar}
+            />
           ))}
+        </div>
+      )}
+
+      {/* MODAL CONFIRMAR ELIMINACIÓN */}
+      {confirmEliminar && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+          <div className="bg-[#111111] border border-white/15 w-full max-w-sm">
+            <div className="px-6 py-5 border-b border-white/10">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-1">Confirmar acción</p>
+              <h3 className="text-sm font-medium text-white">Eliminar compra</h3>
+            </div>
+            <div className="px-6 py-5">
+              <p className="text-sm text-white/50 leading-relaxed">
+                ¿Eliminar la compra de{" "}
+                <span className="text-white font-medium">
+                  {confirmEliminar.usuario?.nombre} {confirmEliminar.usuario?.apellido}
+                </span>
+                {" "}({confirmEliminar.pack?.nombre})? Se eliminarán también todas sus sesiones.
+              </p>
+            </div>
+            <div className="flex gap-3 px-6 pb-5">
+              <button
+                onClick={() => setConfirmEliminar(null)}
+                disabled={eliminando}
+                className="flex-1 py-2.5 border border-white/15 text-white/50 text-xs tracking-[0.15em] uppercase hover:bg-white/5 hover:text-white transition disabled:opacity-40"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleEliminar}
+                disabled={eliminando}
+                className="flex-1 py-2.5 border border-red-500/40 text-red-400 text-xs tracking-[0.15em] uppercase hover:bg-red-500/10 transition disabled:opacity-40"
+              >
+                {eliminando ? (
+                  <div className="w-4 h-4 border border-red-400/30 border-t-red-400 rounded-full animate-spin mx-auto" />
+                ) : (
+                  "Eliminar"
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
