@@ -16,6 +16,7 @@ import Login from './page/Login.jsx';
 import Registro from './page/Registro.jsx';
 import PagoResultado from './page/PagoResultado.jsx';
 import PagoPack from './page/PagoPack.jsx';
+import PagoPackResultado from './page/PagoPackResultado.jsx';
 
 // --- Rutas protegidas ---
 
@@ -48,6 +49,7 @@ function AppInner() {
           <Route path="/pago" element={<RutaPrivada><Pago /></RutaPrivada>} />
           <Route path="/configuracion" element={<RutaPrivada><Configuracion /></RutaPrivada>} />
           <Route path="/pago-pack/:packId" element={<RutaPrivada><PagoPack /></RutaPrivada>} />
+          <Route path="/pago-pack/resultado" element={<PagoPackResultado />} />
 
           <Route path="*" element={
             <div className="min-h-screen flex items-center justify-center">

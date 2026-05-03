@@ -1,25 +1,10 @@
-// src/page/PagoResultado.jsx
-import { useEffect, useState } from "react";
+// src/page/PagoPackResultado.jsx
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-const PagoResultado = () => {
+const PagoPackResultado = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const estado = searchParams.get("estado");
-  const [procesando, setProcesando] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setProcesando(false), 1500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (procesando) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a]">
-        <div className="w-8 h-8 border border-white/20 border-t-white/80 rounded-full animate-spin" />
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0a0a0a] px-6">
@@ -30,15 +15,15 @@ const PagoResultado = () => {
               <span className="text-white text-xl">✓</span>
             </div>
             <p className="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-2">Pago aprobado</p>
-            <h2 className="font-serif text-2xl font-light text-white mb-3">¡Turno confirmado!</h2>
+            <h2 className="font-serif text-2xl font-light text-white mb-3">¡Pack adquirido!</h2>
             <p className="text-white/40 text-sm leading-relaxed mb-8">
-              Tu pago fue aprobado correctamente. Te esperamos en el estudio.
+              Tu pago fue aprobado. El pack se activará en breve y podrás agendar tus sesiones desde "Mis Packs".
             </p>
             <button
-              onClick={() => navigate("/configuracion?tab=turnos")}
+              onClick={() => navigate("/configuracion?tab=packs")}
               className="w-full border border-white/30 text-white py-3 text-xs font-semibold tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all"
             >
-              Ver mis turnos
+              Ver mis packs
             </button>
           </>
         ) : estado === "pendiente" ? (
@@ -49,13 +34,13 @@ const PagoResultado = () => {
             <p className="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-2">Pago pendiente</p>
             <h2 className="font-serif text-2xl font-light text-white mb-3">Procesando pago</h2>
             <p className="text-white/40 text-sm leading-relaxed mb-8">
-              Tu pago está siendo procesado. Te notificaremos cuando se acredite.
+              Tu pago está siendo procesado. Una vez acreditado, el pack se activará automáticamente.
             </p>
             <button
-              onClick={() => navigate("/configuracion?tab=turnos")}
+              onClick={() => navigate("/configuracion?tab=packs")}
               className="w-full border border-white/30 text-white py-3 text-xs font-semibold tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all"
             >
-              Ver mis turnos
+              Ver mis packs
             </button>
           </>
         ) : (
@@ -81,4 +66,4 @@ const PagoResultado = () => {
   );
 };
 
-export default PagoResultado;
+export default PagoPackResultado;
