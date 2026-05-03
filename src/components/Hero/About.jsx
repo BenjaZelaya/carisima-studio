@@ -93,25 +93,15 @@ export default function About() {
           <h2 className="font-serif text-3xl md:text-4xl font-light text-center mb-20">
             Clinical Practitioners
           </h2>
-          <div className="grid md:grid-cols-3 gap-10">
+          <div className="flex justify-center">
+            <div className="w-full max-w-xs">
             <ProfessionalCard
-              name="Carla Martínez"
-              role="Head of Aesthetics"
+              name="Julieta Paz"
+              role="Aesthetics Specialist"
               description="Especialista en tratamientos faciales personalizados y cuidado de la piel."
               image={pro1Img}
             />
-            <ProfessionalCard
-              name="Lucía Gómez"
-              role="Dermal Specialist"
-              description="Enfoque integral en bienestar, estética corporal y tecnología avanzada."
-              image={pro2Img}
-            />
-            <ProfessionalCard
-              name="María Fernández"
-              role="Bio-Tech Lead"
-              description="Acompañamiento profesional con resultados reales y seguros."
-              image={pro3Img}
-            />
+            </div>
           </div>
         </div>
       </section>
