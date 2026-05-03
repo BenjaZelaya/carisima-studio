@@ -48,8 +48,8 @@ function AppInner() {
           <Route path="/horario" element={<RutaPrivada><SeleccionHorario /></RutaPrivada>} />
           <Route path="/pago" element={<RutaPrivada><Pago /></RutaPrivada>} />
           <Route path="/configuracion" element={<RutaPrivada><Configuracion /></RutaPrivada>} />
-          <Route path="/pago-pack/:packId" element={<RutaPrivada><PagoPack /></RutaPrivada>} />
           <Route path="/pago-pack/resultado" element={<PagoPackResultado />} />
+          <Route path="/pago-pack/:packId" element={<RutaPrivada><PagoPack /></RutaPrivada>} />
 
           <Route path="*" element={
             <div className="min-h-screen flex items-center justify-center">
