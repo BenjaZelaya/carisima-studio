@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserCircle, Menu, X, Settings2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useState } from "react";
-import logo from "../../assets/logo-carissima.png";
+import LogoJulietaPaz from "../Hero/LogoJulietaPaz";
 
 export default function Navbar() {
   const { estaLogueado, usuario, logout, esAdmin } = useAuth();
@@ -23,7 +23,7 @@ export default function Navbar() {
         
         {/* LOGO */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Carissima Studio" className="h-10 sm:h-11 invert" />
+          <LogoJulietaPaz className="h-10 sm:h-11 text-white" />
         </Link>
 
         {/* LINKS - Desktop */}
@@ -84,7 +84,7 @@ export default function Navbar() {
       >
         {/* HEADER */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
-          <img src={logo} alt="logo" className="h-9 invert" />
+          <LogoJulietaPaz className="h-9 text-white" />
           <button onClick={() => setMenuOpen(false)} className="text-white/60 hover:text-white transition">
             <X size={24} />
           </button>
