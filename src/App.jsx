@@ -22,8 +22,23 @@ import PagoPackResultado from './page/PagoPackResultado.jsx';
 
 const RutaPrivada = ({ children }) => {
   const { estaLogueado, cargando } = useAuth();
-  if (cargando) return null;
+  if (cargando) return <div className="min-h-screen bg-[#0a0a0a]" />;
   if (!estaLogueado) return <Navigate to="/login" />;
+  return children;
+};
+
+const RutaAdmin = ({ children }) => {
+  const { estaLogueado, esAdmin, cargando } = useAuth();
+  if (cargando) return <div className="min-h-screen bg-[#0a0a0a]" />;
+  if (!estaLogueado) return <Navigate to="/login" />;
+  if (!esAdmin) return <Navigate to="/" />;
+  return children;
+};
+
+const RutaPublica = ({ children }) => {
+  const { estaLogueado, cargando } = useAuth();
+  if (cargando) return null;
+  if (estaLogueado) return <Navigate to="/" />;
   return children;
 };
 
@@ -39,15 +54,15 @@ function AppInner() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<Hero />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/registro" element={<Registro />} />
+          <Route path="/login" element={<RutaPublica><Login /></RutaPublica>} />
+          <Route path="/registro" element={<RutaPublica><Registro /></RutaPublica>} />
           <Route path="/servicios" element={<Servicios />} />
           <Route path="/pago/resultado" element={<PagoResultado />} />
 
           <Route path="/reservar" element={<RutaPrivada><Reservar /></RutaPrivada>} />
           <Route path="/horario" element={<RutaPrivada><SeleccionHorario /></RutaPrivada>} />
           <Route path="/pago" element={<RutaPrivada><Pago /></RutaPrivada>} />
-          <Route path="/configuracion" element={<RutaPrivada><Configuracion /></RutaPrivada>} />
+          <Route path="/configuracion" element={<RutaAdmin><Configuracion /></RutaAdmin>} />
           <Route path="/pago-pack/resultado" element={<PagoPackResultado />} />
           <Route path="/pago-pack/:packId" element={<RutaPrivada><PagoPack /></RutaPrivada>} />
 

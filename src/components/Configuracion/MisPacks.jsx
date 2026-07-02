@@ -1,4 +1,4 @@
-// src/components/Configuracion/MisPacks.jsx
+ // src/components/Configuracion/MisPacks.jsx
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import AgendarSesionModal from "../Packs/AgendarSesionModal.jsx";
